@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IVF 全旅程痛点全景 · 找 MVP 切入点</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1f2430; --sub:#6b7280; --line:#e6e8ec;
+    --hi:#fee2e2; --hi-b:#ef4444;        /* 空白=机会大 */
+    --mid:#ffedd5; --mid-b:#f97316;      /* 土办法 */
+    --have:#eef1f4; --have-b:#9ca3af;    /* 有产品 */
+    --sev-hi:#ef4444; --sev-mh:#f97316; --sev-m:#eab308;
+    --accent:#0e7490;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+  header{background:linear-gradient(135deg,#0e7490,#155e75);color:#fff;padding:24px 28px}
+  header h1{margin:0 0 6px;font-size:22px}
+  header p{margin:4px 0;font-size:13px;opacity:.92}
+  .wrap{max-width:1200px;margin:0 auto;padding:20px 24px 60px}
+  .note{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;font-size:13px;color:#92400e;margin:18px 0}
+  .toolbar{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .toolbar .grp{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .toolbar label{font-size:12px;color:var(--sub);margin-right:2px}
+  select,button{font:inherit;font-size:13px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer}
+  button.toggle{background:#fff}
+  button.toggle.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .stats{font-size:12px;color:var(--sub);margin-left:auto}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--sub);margin:14px 0}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;margin-top:8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 15px;position:relative;border-left:4px solid var(--have-b)}
+  .card.cur-空白{border-left-color:var(--hi-b)}
+  .card.cur-土办法{border-left-color:var(--mid-b)}
+  .card.opp{box-shadow:0 0 0 2px rgba(239,68,68,.12)}
+  .card .top{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+  .tag{font-size:11px;padding:2px 8px;border-radius:20px;background:#eef2f7;color:#475569}
+  .tag.stage{background:#e0f2fe;color:#075985;font-weight:600}
+  .tag.type{background:#f1f5f9;color:#64748b}
+  .sev{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;color:#fff}
+  .sev.高{background:var(--sev-hi)} .sev.中高{background:var(--sev-mh)} .sev.中{background:var(--sev-m)}
+  .star{margin-left:auto;cursor:pointer;font-size:18px;color:#d1d5db;user-select:none}
+  .star.on{color:#f59e0b}
+  .card h3{margin:2px 0 8px;font-size:15px}
+  .quote{font-size:12.5px;color:#374151;background:#f8fafc;border-left:3px solid #cbd5e1;padding:7px 10px;border-radius:0 6px 6px 0;margin:8px 0}
+  .quote .src{display:block;color:var(--sub);font-size:11px;margin-top:3px}
+  .cur{font-size:12.5px;margin:8px 0;padding:8px 10px;border-radius:8px}
+  .cur.空白{background:var(--hi)} .cur.土办法{background:var(--mid)} .cur.有产品{background:var(--have)}
+  .cur b{font-size:11px;padding:1px 6px;border-radius:4px;color:#fff;margin-right:5px}
+  .cur.空白 b{background:var(--hi-b)} .cur.土办法 b{background:var(--mid-b)} .cur.有产品 b{background:var(--have-b)}
+  .gap{font-size:12.5px;color:#0f766e;margin-top:8px}
+  .gap::before{content:"差异化空白 → ";font-weight:700}
+  .ftag{display:inline-block;font-size:10.5px;color:#7c3aed;background:#f3e8ff;border-radius:4px;padding:1px 6px;margin:6px 4px 0 0}
+  footer{max-width:1200px;margin:0 auto;padding:20px 24px;color:var(--sub);font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>IVF 全旅程痛点全景 · 找 MVP 切入点</h1>
+  <p>按阶段铺开 IVF 真实痛点 × 真实用户原话 × <b>现在大家怎么解决（竞品 / 土办法 / 空白）</b> × 差异化机会</p>
+  <p>用法：①勾右上角 ★ 标记"我也有此痛点" ②打开"只看差异化机会"看红/橙边卡片 ③按现状筛"空白/土办法"找最该切的点</p>
+</header>
+<div class="wrap">
+
+  <div class="note">
+    <b>数据与语料说明：</b>痛点与原话来自本项目 <code>01-调研</code> 已有 6 份调研文件，原话均来自公开来源（知乎 / 澎湃·三联·新华社等媒体 / 好大夫·丁香园 / PMC 学术 / 应用商店评论 / Reddit·文学城）并随条目标注，未伪造。
+    小红书 / Instagram / TikTok 的一手评论因登录墙+反爬未纳入；如需补充，走 Claude in Chrome（你登录后我读取页面）。
+    "现在大家怎么解决"中的竞品＝有喜 / 好孕帮 / 试管邦（国内）、Embie / Bonzun / Berry（国外）等。
+  </div>
+
+  <div class="toolbar">
+    <div class="grp"><label>阶段</label><select id="fStage"></select></div>
+    <div class="grp"><label>痛感</label><select id="fSev"><option value="">全部</option><option>高</option><option>中高</option><option>中</option></select></div>
+    <div class="grp"><label>现状</label><select id="fCur"><option value="">全部</option><option>空白</option><option>土办法</option><option>有产品</option></select></div>
+    <div class="grp"><label>排序</label><select id="fSort"><option value="stage">按旅程阶段</option><option value="sev">按痛感强度</option></select></div>
+    <button class="toggle" id="tOpp">只看差异化机会</button>
+    <button class="toggle" id="tMine">只看我标记的 ★</button>
+    <span class="stats" id="stats"></span>
+  </div>
+
+  <div class="legend">
+    <span><span class="dot" style="background:var(--hi-b)"></span>现状=空白（机会最大）</span>
+    <span><span class="dot" style="background:var(--mid-b)"></span>现状=土办法</span>
+    <span><span class="dot" style="background:var(--have-b)"></span>现状=有产品（仍有缺失）</span>
+    <span><span class="dot" style="background:var(--sev-hi)"></span>痛感高</span>
+    <span>差异化机会 = 痛感高/中高 × 现状空白或土办法</span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</div>
+<footer>本页为内部调研工具 · 仅供产品判断 · 医学信息以正规医疗机构为准 · 生成于备孕助手项目 01-调研</footer>
+
+<script>
+// ===== 数据：每条痛点（s阶段 o顺序 t类型 title q原话 src来源 sev痛感 cur现状档 curtxt现状说明 gap空白 tag标签）=====
+const DATA = [
+ {s:"决策选院",o:1,t:"信息/决策",title:"2000+机构资质参差，不知怎么选院选医生",q:"挂号窗口反复听到'没号了，今天已经没号了'；患者只能靠攻略和中介推荐做决策",src:"中新网2024 / 36氪辅助生殖报告",sev:"中高",cur:"有产品",curtxt:"试管邦(查医院/测成功率/测费用/1v1顾问)、有喜(SART算法+生殖中心大全)、好孕帮(医生问诊导流)——都是'信息中介'。土办法：刷小红书攻略、找中介、病友群打听",gap:"无基于个人(年龄/AMH/病因)的个性化院所匹配、无真实等候时间、无费用透明比对",tag:["差异化靠数据"]},
+ {s:"决策选院",o:1,t:"流程",title:"初诊不知带什么证件、挂什么科、夫妻要不要同到",q:"不知挂'生殖医学科'还是'不孕不育科'，号贩子问题仍在",src:"澎湃黄牛调查",sev:"中",cur:"土办法",curtxt:"自己网上搜攻略、打医院电话问、病友群问",gap:"初诊准备 checklist（确定性可做）",tag:["确定性可做"]},
+
+ {s:"术前检查",o:2,t:"信息/流程",title:"检查项多、时间窗口严（激素六项必须月经2-4天）易错过",q:"女方>20项、男方>10项分散在不同时间，错过就等下个月",src:"好大夫检查时间表 / 罗湖生殖中心",sev:"中高",cur:"土办法",curtxt:"有喜/好孕帮只做静态报告记录。土办法：纸质报告袋、自己Excel、问医生(5分钟)、刷攻略",gap:"基于月经周期的检查路径规划器（确定性可做）",tag:["确定性可做"]},
+ {s:"术前检查",o:2,t:"信息/决策",title:"AMH/FSH/激素报告看不懂，不知要不要行动",q:"公立排队2小时看5分钟，拿着报告不知道意味什么",src:"动脉网行业报告",sev:"中高",cur:"土办法",curtxt:"现有app仅上传存档，无解读。土办法：自己百度、问医生、刷知乎",gap:"指标'正常范围对照'（确定性）+ 复杂解读引导到专业方",tag:["确定性可做","可引导外部"]},
+
+ {s:"降调预处理",o:3,t:"情绪/信息",title:"降调副作用像更年期，方案不解释，没人陪",q:"雌激素骤降，潮热盗汗情绪不稳，'像提前进入更年期'",src:"健康之路 / 知乎",sev:"中",cur:"空白",curtxt:"几乎无产品覆盖。土办法：小红书查副作用、病友群互相安慰",gap:"副作用预判手册（确定性）+ 情绪支持",tag:["确定性可做"]},
+ {s:"降调预处理",o:3,t:"信息",title:"CoQ10/DHEA等补剂信息噪音大，剂量品牌各说各话",q:"剂量争议、泛醇vs泛醌、3个月还是6个月，全靠小红书参差信息",src:"知乎医生专栏 / 美中宜和",sev:"中",cur:"土办法",curtxt:"无产品。土办法：刷小红书、病友群、自己搜",gap:"基于年龄/AMH的补剂合理化指引（半确定）",tag:[]},
+
+ {s:"促排",o:4,t:"流程",title:"每天打针、剂量天天口头调，记不住记错",q:"医生当天口头医嘱'今天加半支/减到一支'，无文字记录易记错",src:"澎湃·仁济试管日记",sev:"高",cur:"土办法",curtxt:"有喜仅静态时间提醒(不能多药并行/不能动态改剂量)；国外Embie/Bonzun/Berry有药品库但无医生端推送。土办法：手机备忘录、纸质日历、闹钟、微信问医生",gap:"动态用药日志（多药并行+剂量变更一键更新）——'医生改方案→快速更新'国外也没做好",tag:["确定性可做","你的痛点"]},
+ {s:"促排",o:4,t:"流程",title:"夜针卡36分钟、当天临时通知，协调压力大",q:"夜针误差不超10分钟，时间医生当天才通知，要临时备药备人",src:"好大夫时间表",sev:"高",cur:"土办法",curtxt:"无专门工具。土办法：手机闹钟、家人提醒",gap:"夜针临时倒计时提醒 + 漏打应急指引（确定性可做）",tag:["确定性可做"]},
+ {s:"促排",o:4,t:"情绪/信息",title:"卵泡数据看不懂、OHSS风险在出症状前不自知",q:"'最大17mm、几个16mm'什么意思？离取卵还几天？只能反复追问医生",src:"澎湃·仁济试管日记",sev:"中高",cur:"土办法",curtxt:"无产品做卵泡趋势/OHSS预警。土办法：病友群对比、记本子",gap:"卵泡成长追踪 + OHSS风险自查",tag:["确定性可做"]},
+
+ {s:"取卵",o:5,t:"情绪",title:"取卵数焦虑：取出数字直接决定当天情绪崩不崩",q:"取出数字低于预期'白打这么多针'当场崩溃",src:"知乎试管经历帖",sev:"中高",cur:"土办法",curtxt:"有喜被动记录取卵数。土办法：病友群对比、问医生",gap:"取卵数个体化解读(结合年龄/AMH/AFC)",tag:["可引导外部"]},
+ {s:"取卵",o:5,t:"信息",title:"腹水/OHSS恐惧，什么症状该去急诊边界不清",q:"重度OHSS需住院，但'肚子胀了要不要去急诊'无判断依据",src:"澎湃《最危险的试管并发症》",sev:"中高",cur:"空白",curtxt:"无产品做OHSS分级自查。土办法：百度症状、问医生、忍",gap:"OHSS分级症状自查（规则化，确定性）",tag:["确定性可做"]},
+
+ {s:"养胚",o:6,t:"情绪",title:"逐日淘汰每天等电话，像在等判决",q:"取卵20→受精15→D3→囊胚3→可冻1，每个数字都是独立崩溃点，'每天等电话'",src:"知乎 / 澎湃",sev:"高",cur:"空白",curtxt:"有喜记录数字无逻辑。土办法：每天等医院电话、记本子、刷帖查含义",gap:"胚胎逐日追踪看板 + '这个比例正常吗'解读",tag:["确定性可做"]},
+ {s:"养胚",o:6,t:"信息",title:"胚胎Gardner评分(4AA/4BA)看不懂",q:"医生给出评级患者看不懂，自行搜索容易信息过载",src:"知乎",sev:"中",cur:"土办法",curtxt:"无产品解读。土办法：百度评分含义、刷知乎",gap:"Gardner评分通俗解读器（半确定，可查表）",tag:["确定性可做"]},
+
+ {s:"三代PGT",o:7,t:"情绪",title:"活检后等基因报告1-4周，信息最空白的煎熬",q:"既不能推进也没进展感，无法主动查进度只能等电话，自行搜'嵌合体'制造恐惧",src:"百度健康 / 知乎",sev:"高",cur:"空白",curtxt:"无产品做等待期进度感知。土办法：等医院电话、刷试管邦/知乎经验帖",gap:"报告等待期进度感知（'已等X天，预计还有X天'）",tag:["确定性可做","你的痛点"]},
+ {s:"三代PGT",o:7,t:"情绪/决策",title:"全军覆没：筛完没有可用胚胎，最重的打击",q:"北医三院案例：养囊5→活检4→1个带遗传病、2个染色体异常，仅剩1个可用；'口袋里全是坏苹果技术也无力回天'",src:"知乎(北医三院全记录) / seenshine",sev:"高",cur:"空白",curtxt:"完全无产品承接。土办法：崩溃、病友群、问医生下一步",gap:"全军覆没情景应对(原因+下一步选项+情绪出口)",tag:["你的痛点"]},
+ {s:"三代PGT",o:7,t:"信息",title:"报告术语(整倍体/嵌合体)看不懂，嵌合体能不能用",q:"拿到'嵌合体'结论不知是'可以用'还是'等于没有'，全靠15-30分钟门诊",src:"丁香园 / 好大夫PGT共识",sev:"中高",cur:"土办法",curtxt:"无产品。土办法：自己搜术语、问医生、刷帖",gap:"PGT报告术语解读（接指南，可溯源）",tag:["可引导外部"]},
+
+ {s:"移植",o:8,t:"流程",title:"黄体支持多药并行(针+塞药+口服)，最复杂用药期",q:"肌注黄体酮+阴道用药+口服三路并行，持续14天到验孕再到孕12周",src:"健康界 / 知乎保胎",sev:"高",cur:"土办法",curtxt:"有喜手动提醒、好孕帮'智能病程提醒'(仍是规则推送)。土办法：手机记、闹钟、问医生",gap:"多药并行提醒+剂量调整记录（确定性可做）",tag:["确定性可做","你的痛点"]},
+ {s:"移植",o:8,t:"决策",title:"移植前额外检查(宫腔镜/封闭抗体/NK)开不开，说法相反",q:"医院开单但专家共识说'无反复失败史无需常规查'，患者不知听谁",src:"好大夫《封闭抗体》",sev:"中高",cur:"土办法",curtxt:"无产品做决策引导。土办法：问不同医生、刷帖、病友群",gap:"基于病史的检查必要性分层引导",tag:["可引导外部"]},
+ {s:"移植",o:8,t:"信息",title:"黄体酮副作用与着床症状高度重叠，分不清",q:"便秘/分泌物/乳房胀，副作用和怀孕症状重叠，无法区分，加剧等待焦虑",src:"知乎《移植后1-14天感受》",sev:"高",cur:"空白",curtxt:"无产品。土办法：刷小红书'移植后第X天症状'帖比对、病友群",gap:"按天推送'副作用vs着床信号'去焦虑解读",tag:[]},
+
+ {s:"两周等待",o:9,t:"情绪",title:"移植后到验孕的两周，全程情绪最痛节点之一",q:"'移植完就感觉进了地狱倒计时'；国外'Two weeks of 24/7 思考、过度搜索、找症状、崩溃'",src:"锦欣西囡 / embracingthejourney(国外)",sev:"高",cur:"空白",curtxt:"宝宝树米卡AI通用孕期不适配、好孕帮问答非实时、美柚无效(IVF无排卵周期)。土办法：刷小红书症状帖、反复测试纸拍照对比、病友群",gap:"动态症状日历+去焦虑解读+情绪陪伴+'不要反复测'行为支持",tag:["你的痛点"]},
+ {s:"两周等待",o:9,t:"决策",title:"几天能测、一条杠是没怀还是太早",q:"医生说'别在家测'，但患者普遍第7-8天起反复测、晨中晚各测",src:"美中宜和FAQ / 文学城",sev:"中高",cur:"土办法",curtxt:"无产品给'当前第几天测准确率多少'。土办法：囤试纸反复测、拍照对比、刷帖",gap:"按移植日(D3/D5)校准的验孕时机+准确率提示（确定性可做）",tag:["确定性可做"]},
+
+ {s:"验孕早孕",o:10,t:"信息",title:"HCG翻倍/孕酮数值解读，每次复查随数值波动焦虑",q:"'HCG翻倍好孕酮却低，保胎还是不保'；'HCG出来那一刻手抖'",src:"知乎高赞 / 丁香园",sev:"高",cur:"土办法",curtxt:"好孕帮科普无法实时回应个人数值、宝宝树/美柚按自然孕周不感知IVF用药。土办法：自己算翻倍、记数值、刷帖、问医生",gap:"HCG翻倍计算器+趋势图+参考区间对照（确定性可做）",tag:["确定性可做","你的痛点"]},
+ {s:"验孕早孕",o:10,t:"决策",title:"保胎药什么时候停、减药焦虑，私自调药",q:"'什么时候能停药'高频(美中宜和专建FAQ)，联系不上医生就私自加黄体酮",src:"美中宜和 / 好大夫",sev:"中高",cur:"土办法",curtxt:"无产品做保胎用药管理。土办法：手机记、问医生、刷帖",gap:"保胎药管理日历+减药逻辑解释",tag:["确定性可做"]},
+
+ {s:"毕业转产科",o:11,t:"流程",title:"IVF孕周和自然不同，被产科按末次月经算错",q:"囊胚移植末次月经=移植日前推19天，产科按自然月经算，数据对不上",src:"罗湖生殖中心 / 知乎建档攻略",sev:"中",cur:"空白",curtxt:"完全无产品(通用孕app按末次月经算，IVF用户全算错)。土办法：自己问医生、手动换算",gap:"IVF专属孕周/预产期计算器（确定性可做，刚需）",tag:["确定性可做","你的痛点"]},
+ {s:"毕业转产科",o:11,t:"信息",title:"转产科交接档案缺失，产科不了解IVF背景",q:"需带末次月经/取卵移植数据/HCG史/用药史，无产品帮整理成产科能读懂的档案",src:"知乎建档攻略",sev:"中",cur:"空白",curtxt:"无产品。土办法：自己整理资料、截图病历",gap:"产科交接档案一键生成（确定性可做）",tag:["确定性可做"]},
+
+ {s:"失败循环",o:12,t:"情绪",title:"失败后崩溃，而家人'再试一次'反而加重负担",q:"'取卵两次移植三次都没成功，失败的打击和经济压力让夫妻俩一度选择放弃'；'家人一遍遍说再试一次，但我已崩溃'",src:"新华社2024 / 澎湃",sev:"高",cur:"空白",curtxt:"国内备孕app验孕失败→产品沉默，零覆盖失败场景。土办法：小红书'胎停'战友群、好大夫问诊、自己扛",gap:"失败后即时情绪陪伴(48-72h最脆弱)——最大单点空白",tag:["你的痛点"]},
+ {s:"失败循环",o:12,t:"决策/流程",title:"IVF是循环，多周期数据散落无法纵向对比",q:"平均1.8-2.5周期，但每次重新开始数据清零，历史全靠自己记本子",src:"调研综合(待核实精确数)",sev:"中高",cur:"空白",curtxt:"完全无产品为'多周期用户'建档。土办法：自己记本子/Excel、翻旧报告",gap:"多周期连续档案(跨周期可视化对比)",tag:["确定性可做"]},
+ {s:"失败循环",o:12,t:"决策",title:"'要不要再来一次'是最难的决策，无人帮理清",q:"涉经济(每周期3-7万)/身体/心理/家庭/年龄赛跑，没产品帮也不该替你做决定",src:"调研综合",sev:"中高",cur:"空白",curtxt:"无产品。土办法：和伴侣反复商量、问医生、刷帖",gap:"'再试还是停'决策框架(四维问题清单，不替你决定)",tag:[]},
+
+ {s:"横切·费用",o:13,t:"决策",title:"能报多少、能领多少生育津贴，完全搞不清",q:"31省政策各异、医保报销和生育津贴是两套系统、促排药全自费这个最大坑没人统一讲",src:"国家医保局 / 第一财经",sev:"中高",cur:"空白",curtxt:"医保局发文件不做计算器、好孕帮无政策功能、谱蓝保科普无个性化。土办法：自己查文件、问医院/社保局",gap:"个性化费用/报销/津贴测算——但政策按省按月变，时效维护是硬伤(你已否决为独立MVP)",tag:["维护重"]},
+ {s:"横切·情绪",o:13,t:"情绪",title:"焦虑抑郁贯穿全程，无人专业承接",q:"IVF患者焦虑25-32%、抑郁11-25%；有抑郁情绪者放弃治疗概率是普通4.98倍",src:"PMC10101516等",sev:"高",cur:"空白",curtxt:"医院IVF专科心理咨询极少、通用心理app不懂IVF、小红书病友群参差。土办法：病友群、忍、找朋友",gap:"IVF专属情绪陪伴(但'AI说错话'合规风险需把控)",tag:["合规需把控"]},
+ {s:"横切·伴侣",o:13,t:"情绪",title:"男方逃避检查/婆婆催，压力全在女方",q:"男方把检查当'我没问题'跳过；女方独自承担检查打针取卵全程，还要应对婆婆催生",src:"澎湃 / 知乎",sev:"中高",cur:"空白",curtxt:"无产品做伴侣/家人沟通。土办法：自己扛、夫妻私下沟通",gap:"沟通脚本+夫妻共用治疗日历/角色分工",tag:[]},
+ {s:"横切·职场",o:13,t:"流程",title:"一周期就医约15次，瞒着公司编借口请假",q:"监测期频繁往返，请病假需病历=暴露诊断；重庆有患者因OHSS请假14天被违法解雇",src:"Sociological Review / 重庆南岸法院2023",sev:"中",cur:"空白",curtxt:"无产品。土办法：编借口、攒年假、跟领导坦白赌一把",gap:"请假时间表优化+职场权益FAQ(法律+案例)",tag:["确定性可做"]}
+];
+
+// ===== 渲染 =====
+const $=s=>document.querySelector(s);
+const grid=$("#grid"), stats=$("#stats");
+const stages=["全部",...[...new Set(DATA.sort((a,b)=>a.o-b.o).map(d=>d.s))]];
+$("#fStage").innerHTML=stages.map(s=>`<option value="${s==='全部'?'':s}">${s}</option>`).join("");
+const mineKey="ivf_pain_mine";
+let mine=JSON.parse(localStorage.getItem(mineKey)||"{}");
+const id=d=>d.s+"|"+d.title;
+const isOpp=d=>(d.sev==="高"||d.sev==="中高")&&(d.cur==="空白"||d.cur==="土办法");
+
+const state={stage:"",sev:"",cur:"",sort:"stage",opp:false,mine:false};
+function render(){
+  let list=DATA.filter(d=>
+    (!state.stage||d.s===state.stage)&&
+    (!state.sev||d.sev===state.sev)&&
+    (!state.cur||d.cur===state.cur)&&
+    (!state.opp||isOpp(d))&&
+    (!state.mine||mine[id(d)])
+  );
+  const sevRank={"高":0,"中高":1,"中":2};
+  list.sort((a,b)=> state.sort==="sev" ? (sevRank[a.sev]-sevRank[b.sev]||a.o-b.o) : (a.o-b.o));
+  grid.innerHTML=list.map(d=>{
+    const on=mine[id(d)]?"on":"";
+    const opp=isOpp(d)?"opp":"";
+    const tags=(d.tag||[]).map(t=>`<span class="ftag">${t}</span>`).join("");
+    return `<div class="card cur-${d.cur} ${opp}">
+      <div class="top">
+        <span class="tag stage">${d.s}</span>
+        <span class="tag type">${d.t}</span>
+        <span class="sev ${d.sev}">${d.sev}</span>
+        <span class="star ${on}" data-id="${id(d)}">${on?"★":"☆"}</span>
+      </div>
+      <h3>${d.title}</h3>
+      <div class="quote">"${d.q}"<span class="src">— ${d.src}</span></div>
+      <div class="cur ${d.cur}"><b>${d.cur}</b>${d.curtxt}</div>
+      <div class="gap">${d.gap}</div>
+      ${tags}
+    </div>`;
+  }).join("");
+  const oppN=DATA.filter(isOpp).length, mineN=Object.values(mine).filter(Boolean).length;
+  stats.textContent=`显示 ${list.length} / 共 ${DATA.length} 条 · 差异化机会 ${oppN} 条 · 我标记 ${mineN} 条`;
+  grid.querySelectorAll(".star").forEach(el=>el.onclick=()=>{
+    const k=el.dataset.id; mine[k]=!mine[k]; localStorage.setItem(mineKey,JSON.stringify(mine)); render();
+  });
+}
+$("#fStage").onchange=e=>{state.stage=e.target.value;render()};
+$("#fSev").onchange=e=>{state.sev=e.target.value;render()};
+$("#fCur").onchange=e=>{state.cur=e.target.value;render()};
+$("#fSort").onchange=e=>{state.sort=e.target.value;render()};
+$("#tOpp").onclick=e=>{state.opp=!state.opp;e.target.classList.toggle("on",state.opp);render()};
+$("#tMine").onclick=e=>{state.mine=!state.mine;e.target.classList.toggle("on",state.mine);render()};
+render();
+</script>
+</body>
+</html>

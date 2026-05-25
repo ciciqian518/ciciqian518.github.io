@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IVF 市场规模 · 交互漏斗</title>
+<style>
+  :root{--bg:#f5f7f8;--card:#fff;--ink:#1f2933;--sub:#6b7785;--line:#e6eaed;--accent:#0e8a8a;
+    --l1:#cfe9e7;--l2:#9fd6d1;--l3:#5cbcb3;--l4:#0e8a8a;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+  header{background:linear-gradient(135deg,#0e8a8a,#0b6b6b);color:#fff;padding:20px 24px}
+  header h1{margin:0 0 4px;font-size:20px}
+  header p{margin:2px 0;font-size:12.5px;opacity:.92}
+  .wrap{max-width:980px;margin:0 auto;padding:18px 20px 50px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+  .ctrl{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+  .seg{display:inline-flex;border:1px solid var(--accent);border-radius:9px;overflow:hidden}
+  .seg button{font:inherit;font-size:13px;padding:7px 14px;border:0;background:#fff;color:var(--accent);cursor:pointer}
+  .seg button.on{background:var(--accent);color:#fff}
+  .slider-row{flex:1;min-width:260px}
+  .slider-row label{font-size:13px;color:var(--sub)}
+  .pen{font-size:22px;font-weight:800;color:var(--accent)}
+  input[type=range]{width:100%;accent-color:var(--accent);height:26px}
+  .quick{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .quick button{font:inherit;font-size:11.5px;padding:3px 9px;border:1px solid var(--line);border-radius:14px;background:#fff;cursor:pointer;color:var(--sub)}
+  .quick button:hover{border-color:var(--accent);color:var(--accent)}
+  .main{display:grid;grid-template-columns:1.15fr 1fr;gap:16px}
+  @media(max-width:720px){.main{grid-template-columns:1fr}}
+  .layer{margin:9px auto;border-radius:10px;padding:12px 16px;color:#0b3b39;text-align:center;transition:width .25s}
+  .layer .name{font-size:12.5px;opacity:.85}
+  .layer .num{font-size:22px;font-weight:800;margin:2px 0}
+  .layer .tip{font-size:11px;opacity:.7}
+  .L1{background:var(--l1)} .L2{background:var(--l2)} .L3{background:var(--l3);color:#063b37} .L4{background:var(--l4);color:#fff}
+  .conv{font-size:11.5px;color:var(--sub);text-align:center;margin:-2px 0}
+  .basis-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px}
+  .calc{font-size:12.5px;border-bottom:1px dashed var(--line);padding:8px 0}
+  .calc b{color:var(--ink)} .calc .formula{color:var(--accent);font-weight:700}
+  .calc .src{color:var(--sub);font-size:11px}
+  .assume{font-size:11.5px;color:var(--sub);margin-top:10px;line-height:1.7}
+  .verdict{background:#e6f5f4;border:1px solid #b8e0dc;border-radius:10px;padding:12px 15px;font-size:13px;color:#0b5b56}
+  .foot{font-size:11px;color:var(--sub);margin-top:10px}
+  b.hl{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <h1>IVF 市场规模 · 交互漏斗</h1>
+  <p>拖动渗透率、切换地域 → 左边漏斗 + 右边测算依据实时变。</p>
+</header>
+<div class="wrap">
+
+  <div class="panel">
+    <div class="ctrl">
+      <div>
+        <div style="font-size:12px;color:var(--sub);margin-bottom:5px">地域</div>
+        <div class="seg" id="seg">
+          <button data-r="nation" class="on">全国</button>
+          <button data-r="tier1">一线(京沪广深)</button>
+          <button data-r="sh">上海</button>
+        </div>
+      </div>
+      <div class="slider-row">
+        <label>渗透率（占当地年新增 IVF 患者比例）：<span class="pen" id="penVal">10%</span></label>
+        <input type="range" id="pen" min="1" max="50" value="10" step="1">
+        <div class="quick">
+          <button data-p="5">5% 冷启动</button>
+          <button data-p="10">10%</button>
+          <button data-p="30">30% 很优秀</button>
+          <button data-p="50">50% 天花板</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="panel">
+      <div class="layer L1" style="width:100%">
+        <div class="name">中国不孕夫妇（总背景）</div><div class="num">≈ 4770 万对</div>
+      </div>
+      <div class="conv" id="cv1">↓</div>
+      <div class="layer L2" id="bL2" style="width:80%">
+        <div class="name" id="nL2">每年新进 IVF（全国）</div><div class="num" id="vL2">≈ 85 万/年</div>
+      </div>
+      <div class="conv" id="cv2">↓ 渗透率 10%</div>
+      <div class="layer L3" id="bL3" style="width:50%">
+        <div class="name">可服务用户（年新增）</div><div class="num" id="vL3">—</div>
+      </div>
+      <div class="conv">↓ 活跃 8-10 月 ×0.7</div>
+      <div class="layer L4" id="bL4" style="width:38%">
+        <div class="name">同时在用（存量 MAU）</div><div class="num" id="vL4">—</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="basis-title">📐 测算依据（实时）</div>
+      <div id="basis"></div>
+      <div class="assume" id="assume"></div>
+    </div>
+  </div>
+
+  <div class="panel verdict" id="verdict"></div>
+  <div class="foot">来源：国家卫健委辅助生殖机构名单、辅助生殖行业报告(2023-24)、PMC(累积活产率)。地域按周期占比估算。均为量级估算，非精确统计。详见 <code>市场规模测算.md</code>。</div>
+</div>
+
+<script>
+var REGION={
+  nation:{name:"全国", base:85, how:"全国年辅助生殖周期约 200 万 → 新患者约 85 万", share:"100%"},
+  tier1:{name:"一线(京沪广深)", base:18.7, how:"全国 85 万 × 一线占比约 22%（机构与周期量集中）", share:"≈22%"},
+  sh:{name:"上海", base:4.25, how:"全国 85 万 × 上海占比约 5%（与 GDP 占比相符；上海年 IVF 周期 8-12 万）", share:"≈5%"}
+};
+var region="nation", pen=10;
+var $=function(id){return document.getElementById(id);};
+function fmt(x){ return x>=1 ? (Math.round(x*10)/10).toString() : (Math.round(x*100)/100).toString(); }
+
+function render(){
+  var r=REGION[region], base=r.base;
+  var l3=base*pen/100, l4=l3*0.7;
+
+  // 漏斗数字
+  $("nL2").textContent="每年新进 IVF（"+r.name+"）";
+  $("vL2").textContent="≈ "+fmt(base)+" 万/年";
+  $("vL3").textContent="≈ "+fmt(l3)+" 万/年";
+  $("vL4").textContent="≈ "+fmt(l4)+" 万";
+  $("penVal").textContent=pen+"%";
+  $("cv1").textContent="↓ 约 "+(base/4770*100).toFixed(1)+"% 当年走到 IVF";
+  $("cv2").textContent="↓ 渗透率 "+pen+"%";
+
+  // 漏斗宽度（sqrt 让小层可见）
+  var w2 = region==="nation"?80:(region==="tier1"?58:44);
+  $("bL2").style.width=w2+"%";
+  $("bL3").style.width=Math.max(28, w2*Math.sqrt(pen/100))+"%";
+  $("bL4").style.width=Math.max(22, w2*Math.sqrt(pen/100)*0.82)+"%";
+
+  // 右侧测算依据（实时）
+  $("basis").innerHTML =
+    '<div class="calc"><b>① 不孕夫妇</b>：4770 万对<br><span class="src">不孕率约 18% × 全国育龄夫妇（智研咨询 2023）</span></div>'+
+    '<div class="calc"><b>② 年新进 IVF（'+r.name+'）</b>：'+fmt(base)+' 万/年<br><span class="src">'+r.how+'（'+r.share+'）</span></div>'+
+    '<div class="calc"><b>③ 可服务（年新增）</b>：<span class="formula">'+fmt(base)+' 万 × '+pen+'% = '+fmt(l3)+' 万/年</span></div>'+
+    '<div class="calc"><b>④ 同时在用 MAU</b>：<span class="formula">'+fmt(l3)+' 万 × 0.7 = '+fmt(l4)+' 万</span><br><span class="src">单用户活跃窗口 8-10 月 → 年新增 ×约0.7</span></div>';
+
+  $("assume").innerHTML =
+    '<b>关键假设：</b><br>'+
+    '· 全国年辅助生殖周期 ~200 万 → 新患者约 85 万/年<br>'+
+    '· 地域占比（按周期量）：一线 ≈22%、上海 ≈5%<br>'+
+    '· 活跃系数 0.7 = 平均活跃 8-10 月 ÷ 12<br>'+
+    '· 渗透率 = 你触达到的占"当地年新患者"的比例';
+
+  // 结论
+  var tier = pen<=5?"冷启动":(pen<=10?"早期":(pen<=30?"做得相当不错":"接近天花板"));
+  $("verdict").innerHTML =
+    '在 <b class="hl">'+r.name+'</b>、渗透率 <b class="hl">'+pen+'%</b>（'+tier+'）下：每年可服务 <b class="hl">≈'+fmt(l3)+' 万</b>新用户，同时在用 <b class="hl">≈'+fmt(l4)+' 万 MAU</b>。<br>'+
+    '这是中量级垂直市场——非千万级大众盘，但每年有稳定新患者涌入（'+fmt(base)+' 万/年）。所以「用完即走」反而是利：池子不枯竭、靠口碑一茬茬拉新。对「自用＋作品集＋IP＋不亏」的目标，完全够。';
+}
+
+$("seg").addEventListener("click",function(e){
+  var b=e.target.closest("button"); if(!b) return;
+  region=b.getAttribute("data-r");
+  var btns=$("seg").getElementsByTagName("button");
+  for(var i=0;i<btns.length;i++){ btns[i].classList.toggle("on", btns[i]===b); }
+  render();
+});
+$("pen").addEventListener("input",function(e){ pen=parseInt(e.target.value,10); render(); });
+var qs=document.querySelectorAll(".quick button");
+for(var i=0;i<qs.length;i++){
+  qs[i].addEventListener("click",function(e){
+    pen=parseInt(e.target.getAttribute("data-p"),10);
+    $("pen").value=pen; render();
+  });
+}
+render();
+</script>
+</body>
+</html>
