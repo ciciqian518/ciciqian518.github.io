@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>德国 IVF app · 中文复原 + journey 补全 mockup v1</title>
+<style>
+  :root{
+    --bg:#FBFAF7; --paper:#FFFFFF; --ink:#2E3A38; --ink-soft:#5C6B68; --ink-faint:#9AA6A3;
+    --line:#E8E3DB; --teal:#5B9A92; --teal-bg:#EAF3F1; --teal-deep:#3E7A72;
+    --amber:#B5824E; --amber-bg:#FAF1E6; --green:#6FA98C; --green-bg:#EDF5EF;
+    --rose:#B97A86; --rose-bg:#FCF4F2;
+    --de:#7B8BB5; --de-bg:#EEF1F8; --new:#C58A4E; --new-bg:#FBF1E5;
+    --shadow:0 1px 3px rgba(60,70,68,.07),0 6px 22px rgba(60,70,68,.06);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;background:#EFEBE3;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.6;font-size:14px;-webkit-font-smoothing:antialiased;}
+  .page{max-width:1080px;margin:0 auto;padding:28px 18px 70px;}
+  h1{font-size:22px;margin:0 0 4px;}
+  .intro{color:var(--ink-soft);font-size:13px;max-width:760px;margin:0 auto 6px;text-align:center;}
+  .pagehead{text-align:center;margin-bottom:14px;}
+  .legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-size:12px;color:var(--ink-soft);margin:10px 0 4px;}
+  .lg{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  .dot.de{background:var(--de);} .dot.new{background:var(--new);}
+  .toggle{display:inline-flex;align-items:center;gap:7px;background:var(--paper);border:1px solid var(--line);
+    border-radius:20px;padding:5px 12px;font-size:12px;cursor:pointer;color:var(--ink-soft);box-shadow:var(--shadow);}
+  .toggle.on{background:var(--teal-bg);border-color:#CDE6D7;color:var(--teal-deep);font-weight:600;}
+
+  /* 手机阵列 */
+  .phones{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;align-items:flex-start;margin-top:20px;}
+  .device{width:340px;}
+  .devlabel{text-align:center;font-size:12.5px;font-weight:700;color:var(--teal-deep);margin-bottom:9px;}
+  .devlabel span{display:block;font-weight:400;color:var(--ink-faint);font-size:11.5px;margin-top:1px;}
+  .phone{width:340px;height:710px;background:var(--bg);border-radius:38px;border:9px solid #1f2624;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;display:flex;flex-direction:column;}
+  .notch{height:26px;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;color:var(--ink-soft);font-weight:600;}
+  .screen{flex:1;overflow-y:auto;position:relative;}
+  .screen::-webkit-scrollbar{width:0;}
+  .appbar{padding:8px 18px 6px;display:flex;align-items:center;justify-content:space-between;}
+  .appbar h2{font-size:18px;margin:0;font-weight:700;}
+  .appbar .date{font-size:11.5px;color:var(--ink-faint);}
+  .body{padding:4px 16px 20px;}
+
+  /* 角标 */
+  .badge{font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;vertical-align:middle;white-space:nowrap;}
+  .badge.de{background:var(--de-bg);color:var(--de);}
+  .badge.new{background:var(--new-bg);color:var(--new);}
+  .anno .badge{transition:opacity .2s;}
+  body.hideanno .badge{display:none;}
+
+  /* 卡片 / 药条 */
+  .seg{font-size:12px;font-weight:700;color:var(--ink-faint);margin:16px 2px 7px;letter-spacing:.5px;display:flex;align-items:center;gap:6px;}
+  .seg .ln{flex:1;height:1px;background:var(--line);}
+  .med{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:11px 13px;margin:8px 0;
+    display:flex;align-items:center;gap:11px;box-shadow:var(--shadow);position:relative;}
+  .ic{width:34px;height:34px;border-radius:10px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:17px;}
+  .ic.oral{background:#FCEFD9;} .ic.vag{background:#F1E5F0;} .ic.inj{background:#E4EEF5;} .ic.sup{background:#E9F2EA;}
+  .med .mn{flex:1;min-width:0;}
+  .med .mn b{font-size:14.5px;}
+  .med .mn .sub{font-size:11.5px;color:var(--ink-soft);}
+  .med .tm{font-size:12px;color:var(--ink-faint);font-variant-numeric:tabular-nums;text-align:right;}
+  .chk{width:24px;height:24px;border-radius:50%;border:2px solid var(--teal);flex:0 0 auto;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;transition:.15s;}
+  .chk.done{background:var(--teal);border-color:var(--teal);}
+  .med.done{opacity:.55;}
+  .med.done .mn b{text-decoration:line-through;}
+  .bell{position:absolute;right:46px;top:11px;font-size:11px;color:var(--ink-faint);}
+
+  /* 进度环 */
+  .ring{display:flex;align-items:center;gap:14px;background:var(--teal-bg);border:1px solid #D5E7E3;border-radius:16px;padding:13px 15px;margin:10px 0 4px;}
+  .ring .big{font-size:26px;font-weight:800;color:var(--teal-deep);font-variant-numeric:tabular-nums;}
+  .ring .t b{color:var(--teal-deep);}
+  .ring .t{font-size:13px;}
+  .ring .t span{font-size:11.5px;color:var(--ink-soft);}
+
+  /* 停药 / 提示卡 */
+  .alert{border-radius:13px;padding:10px 13px;margin:9px 0;font-size:12.5px;display:flex;gap:9px;align-items:flex-start;}
+  .alert.stop{background:var(--rose-bg);border:1px solid #EFD9D5;color:#9C5A63;}
+  .alert.tip{background:var(--amber-bg);border:1px solid #EAD6BC;color:#8A6336;}
+  .alert .ai{font-size:15px;}
+
+  /* 通用按钮 */
+  .btn{display:block;width:100%;text-align:center;background:var(--teal);color:#fff;border:none;border-radius:13px;
+    padding:13px;font-size:14.5px;font-weight:700;cursor:pointer;margin:14px 0 4px;box-shadow:var(--shadow);font-family:inherit;}
+  .btn.ghost{background:var(--paper);color:var(--teal-deep);border:1px solid #CDE6D7;}
+  .btn.sm{padding:9px;font-size:13px;margin:8px 0;}
+
+  /* 底部导航 */
+  .tabbar{flex:0 0 auto;height:60px;background:var(--paper);border-top:1px solid var(--line);display:flex;}
+  .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;color:var(--ink-faint);cursor:pointer;}
+  .tab .ti{font-size:19px;line-height:1;}
+  .tab.active{color:var(--teal-deep);font-weight:700;}
+
+  /* tab 内容切换 */
+  .panel{display:none;} .panel.show{display:block;}
+
+  /* 录入"预填确认" */
+  .scanhint{background:var(--de-bg);border:1px dashed #B9C4DE;border-radius:13px;padding:13px;text-align:center;font-size:12.5px;color:var(--de);margin:8px 0;}
+  .field{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:11px 13px;margin:9px 0;box-shadow:var(--shadow);}
+  .field .lbl{font-size:11px;color:var(--ink-faint);}
+  .field .val{font-size:14.5px;font-weight:600;display:flex;align-items:center;justify-content:space-between;}
+  .field .val .edit{font-size:11.5px;color:var(--teal);font-weight:600;}
+  .ambig{background:var(--rose-bg);border:1px solid #EFD9D5;border-radius:13px;padding:11px 13px;margin:9px 0;}
+  .ambig .q{font-size:13px;font-weight:700;color:#9C5A63;margin-bottom:8px;}
+  .opt{display:flex;gap:8px;}
+  .opt .o{flex:1;text-align:center;border:1.5px solid var(--line);border-radius:10px;padding:9px 4px;font-size:12.5px;background:var(--paper);cursor:pointer;}
+  .opt .o.sel{border-color:var(--teal);background:var(--teal-bg);color:var(--teal-deep);font-weight:700;}
+
+  /* overview */
+  .ov{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow);font-size:12.5px;}
+  .ov h4{margin:0 0 4px;font-size:14px;}
+  .ov table{width:100%;border-collapse:collapse;margin-top:8px;}
+  .ov td{padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:top;}
+  .ov td:first-child{color:var(--ink-soft);white-space:nowrap;}
+  .ov .when{color:var(--ink-faint);font-size:11px;}
+
+  /* 药品库 */
+  .libitem{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 13px;margin:7px 0;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);}
+  .libitem .tag2{font-size:10.5px;color:var(--ink-faint);}
+  .pill2{font-size:10px;padding:1px 7px;border-radius:9px;background:var(--green-bg);color:#3F7D63;margin-left:auto;}
+
+  /* overlay */
+  .overlay{position:absolute;inset:0;background:rgba(40,50,48,.4);display:none;align-items:flex-end;z-index:20;}
+  .overlay.show{display:flex;}
+  .sheet{background:var(--bg);width:100%;max-height:86%;border-radius:22px 22px 0 0;overflow-y:auto;padding:8px 16px 22px;}
+  .sheet::-webkit-scrollbar{width:0;}
+  .grip{width:38px;height:4px;background:var(--line);border-radius:3px;margin:8px auto 4px;}
+  .sheet h3{font-size:17px;margin:6px 2px 2px;}
+  .sheet .sd{font-size:12px;color:var(--ink-soft);margin:0 2px 8px;}
+  .x{position:absolute;}
+
+  .note{font-size:11px;color:var(--ink-faint);margin:6px 2px;}
+  .foot{text-align:center;color:var(--ink-faint);font-size:12px;margin-top:30px;}
+  .seg .badge{margin-left:auto;}
+</style>
+</head>
+<body class="anno">
+<div class="page">
+
+  <div class="pagehead">
+    <h1>德国 IVF app · 中文复原 + 按 journey 补全</h1>
+    <p class="intro">左机＝把德国 app 的界面复原成中文；右机＝按 user journey 补全德国版没有、但你今天深访挖出来该有的部分。点底部导航切换页面，点圆圈打卡，点按钮看「录入·复诊 overview·提醒」三个弹层。</p>
+    <div class="legend">
+      <span class="lg"><span class="dot de"></span>🇩🇪 德国版已有（复原）</span>
+      <span class="lg"><span class="dot new"></span>✨ 我们按 journey 补全</span>
+      <span class="toggle on" id="annoToggle" onclick="toggleAnno()">● 角标已显示（点击隐藏）</span>
+    </div>
+  </div>
+
+  <div class="phones">
+
+    <!-- ================= 左机：德国版复原 ================= -->
+    <div class="device">
+      <div class="devlabel">A · 德国版复原（中文）<span>忠实还原截图里的 4 个界面</span></div>
+      <div class="phone">
+        <div class="notch"><span>9:41</span><span>📶 🔋</span></div>
+        <div class="screen">
+          <div class="appbar"><h2 id="deTitle">日历</h2><span class="date">3月12日 周三</span></div>
+          <div class="body">
+
+            <!-- 德国 日历 panel -->
+            <div class="panel show" data-de="cal">
+              <div style="text-align:center;margin:4px 0 8px;"><span class="badge de">🇩🇪 Kalender 原版</span></div>
+              <div class="seg">今天 · 3月12日<span class="ln"></span></div>
+              <div class="med done"><div class="ic oral">💊</div><div class="mn"><b>甲状腺素</b><div class="sub">1 片</div></div><div class="tm">07:30</div><div class="chk done">✓</div></div>
+              <div class="med done"><div class="ic vag">💠</div><div class="mn"><b>雪诺酮 Cyclogest</b><div class="sub">1 支</div></div><div class="tm">08:30</div><div class="chk done">✓</div></div>
+              <div class="med"><span class="bell">🔔</span><div class="ic vag">💠</div><div class="mn"><b>雪诺酮 Cyclogest</b><div class="sub">1 支</div></div><div class="tm">20:30</div><div class="chk" onclick="tg(this)"></div></div>
+              <div class="seg">明天 · 3月13日<span class="ln"></span></div>
+              <div class="med"><span class="bell">🔔</span><div class="ic oral">💊</div><div class="mn"><b>甲状腺素</b><div class="sub">1 片</div></div><div class="tm">07:30</div><div class="chk" onclick="tg(this)"></div></div>
+              <div class="med"><span class="bell">🔔</span><div class="ic vag">💠</div><div class="mn"><b>雪诺酮 Cyclogest</b><div class="sub">1 支</div></div><div class="tm">08:30</div><div class="chk" onclick="tg(this)"></div></div>
+              <p class="note">复原自截图：今天/明天分组、每条药卡 = 时间 + 铃铛提醒 + 打勾圈。德国版到此为止——只有"提醒+打卡"。</p>
+            </div>
+
+            <!-- 德国 选药模板 panel -->
+            <div class="panel" data-de="lib">
+              <div style="text-align:center;margin:4px 0 8px;"><span class="badge de">🇩🇪 选药模板原版</span></div>
+              <div class="scanhint" style="border-style:solid;background:var(--paper);color:var(--ink-soft);">＋ 自定义 · 手动输入</div>
+              <div class="note" style="margin-left:2px;">选择一个药品模板（德国版预置 IVF 药库）：</div>
+              <div class="libitem"><b>Clomid / 克罗米芬</b></div>
+              <div class="libitem"><b>Gonal-F 300/450/900</b></div>
+              <div class="libitem"><b>Menopur 1200</b></div>
+              <div class="libitem"><b>Orgalutran</b></div>
+              <div class="libitem"><b>Ovitrelle 夜针</b></div>
+              <div class="libitem"><b>Progynova 1mg / 2mg</b></div>
+              <div class="libitem"><b>Utrogestan</b></div>
+              <p class="note">德国版亮点：预置 IVF 专用药库（一选就有）。但全是欧洲药名、欧洲方案，<b>国内促排药（果纳芬/丽申宝/尿促/雪诺酮…）对不上</b>。</p>
+            </div>
+
+            <!-- 德国 疗程 panel -->
+            <div class="panel" data-de="treat">
+              <div style="text-align:center;margin:4px 0 8px;"><span class="badge de">🇩🇪 Behandlung 原版</span></div>
+              <div class="ov"><h4>本次疗程</h4>
+                <div class="sub" style="color:var(--ink-soft);font-size:12px;">长方案 · 移植后黄体支持期</div>
+                <table><tr><td>开始</td><td>2 月 18 日</td></tr><tr><td>移植日</td><td>3 月 5 日</td></tr><tr><td>验孕日</td><td>3 月 19 日</td></tr></table>
+              </div>
+              <p class="note">德国版有"疗程"概念，但偏静态信息页：记开始/移植/验孕几个日期，<b>不打通用药历史、不做多周期对比</b>。</p>
+            </div>
+
+            <!-- 德国 知识 panel -->
+            <div class="panel" data-de="know">
+              <div style="text-align:center;margin:4px 0 8px;"><span class="badge de">🇩🇪 Wissen / Kliniken 原版</span></div>
+              <div class="libitem"><div class="ic oral" style="background:var(--de-bg);">📖</div><div class="mn"><b>知识库 Wissen</b><div class="sub">促排/取卵/移植科普文章</div></div></div>
+              <div class="libitem"><div class="ic inj" style="background:var(--de-bg);">🏥</div><div class="mn"><b>诊所 Kliniken</b><div class="sub">德国生殖中心目录</div></div></div>
+              <p class="note">德国版底部还有"知识"+"诊所目录"。诊所目录是欧洲的，对国内用户无用；知识库是通用科普。</p>
+            </div>
+
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tab" onclick="deTab('know','首页',this)"><span class="ti">🏠</span>首页</div>
+          <div class="tab active" onclick="deTab('cal','日历',this)"><span class="ti">📅</span>日历</div>
+          <div class="tab" onclick="deTab('treat','疗程',this)"><span class="ti">🩺</span>疗程</div>
+          <div class="tab" onclick="deTab('lib','诊所',this)"><span class="ti">🏥</span>诊所</div>
+          <div class="tab" onclick="deTab('know','知识',this)"><span class="ti">📖</span>知识</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 右机：补全版 ================= -->
+    <div class="device">
+      <div class="devlabel">B · 我们补全版（落进今天的洞察）<span>同一套底，但补上德国版没有的 6 件 IVF 专属事</span></div>
+      <div class="phone">
+        <div class="notch"><span>9:41</span><span>📶 🔋</span></div>
+        <div class="screen" id="cnScreen">
+
+          <div class="appbar"><h2 id="cnTitle">今日</h2><span class="date" id="cnDate">3月12日 · 移植后第7天</span></div>
+          <div class="body">
+
+            <!-- 今日时间轴 -->
+            <div class="panel show" data-cn="today">
+              <div class="ring">
+                <div class="big">5/8</div>
+                <div class="t"><b>今天还有 3 件事</b><br><span>晨 ✓ · 午 2 件待办 · 晚 1 件</span></div>
+                <span class="badge new" style="margin-left:auto;">✨ Aha</span>
+              </div>
+              <div class="alert stop"><span class="ai">⏳</span><div><b>环孢素 还有 3 天停药</b>（医嘱：查 HCG 后停）。到期我会提醒你，别自己记。<span class="badge new">✨ 停药节点</span></div></div>
+
+              <div class="seg">🌅 早晨 7:30–9:00 <span class="ln"></span><span class="badge new">✨ 按时段成轴</span></div>
+              <div class="med done"><div class="ic oral">💊</div><div class="mn"><b>优甲乐</b><div class="sub">饭前 0.5h · 1 片</div></div><div class="tm">07:30</div><div class="chk done">✓</div></div>
+              <div class="med done"><div class="ic inj">💉</div><div class="mn"><b>黄体酮针</b><div class="sub">臀肌注 · ⚠️ 不可冷藏</div></div><div class="tm">08:00</div><div class="chk done">✓</div></div>
+              <div class="med done"><div class="ic oral">💊</div><div class="mn"><b>环孢素</b><div class="sub">早 50mg · 2 片</div></div><div class="tm">09:00</div><div class="chk done">✓</div></div>
+
+              <div class="seg">☀️ 中午 11:30–15:00 <span class="ln"></span></div>
+              <div class="med"><span class="bell">🔔</span><div class="ic oral">💊</div><div class="mn"><b>达芙通</b><div class="sub">1 片</div></div><div class="tm">14:30</div><div class="chk" onclick="tg(this)"></div></div>
+              <div class="med"><span class="bell">🔔</span><div class="ic sup">🌫️</div><div class="mn"><b>雪诺酮</b><div class="sub">阴道用 · 1 支</div></div><div class="tm">15:00</div><div class="chk" onclick="tg(this)"></div></div>
+
+              <div class="seg">🌙 晚上 20:00–睡前 <span class="ln"></span></div>
+              <div class="med"><span class="bell">🔔</span><div class="ic oral">💊</div><div class="mn"><b>环孢素</b><div class="sub">晚 50mg · 2 片</div></div><div class="tm">22:00</div><div class="chk" onclick="tg(this)"></div></div>
+
+              <div class="alert tip"><span class="ai">🤔</span><div><b>“刚才那颗达芙通，我到底吃没吃？”</b> 打了卡就不会再纠结——打卡防的是<b>重复吃</b>，不只是漏吃。<span class="badge new">✨ 防重复服</span></div></div>
+
+              <button class="btn" onclick="openSheet('sheetAdd')">＋ 录入 / 更新医生方案</button>
+              <button class="btn ghost sm" onclick="openSheet('sheetOv')">📄 一键生成「复诊用药小结」</button>
+            </div>
+
+            <!-- 日历（同德国，略） -->
+            <div class="panel" data-cn="cal">
+              <div class="seg">本周期时间轴<span class="ln"></span><span class="badge new">✨ 连续视图</span></div>
+              <div class="med"><div class="ic inj">💉</div><div class="mn"><b>2/18 起 · 降调促排</b><div class="sub">果纳芬 + 尿促</div></div><div class="tm">已过</div></div>
+              <div class="med"><div class="ic vag">💠</div><div class="mn"><b>3/5 · 移植 + 黄体支持</b><div class="sub">三路并行：黄体酮针/雪诺酮/达芙通</div></div><div class="tm">第7天</div></div>
+              <div class="med"><div class="ic oral">🩸</div><div class="mn"><b>3/19 · 验孕（查 HCG）</b><div class="sub">当天起部分药停</div></div><div class="tm">还有12天</div></div>
+              <p class="note">不再是散点日历——把一整个周期连成一条可回看的线（对应痛点 P4「缺连续性」）。</p>
+            </div>
+
+            <!-- 疗程：多周期档案 -->
+            <div class="panel" data-cn="treat">
+              <div class="seg">我的病程档案<span class="ln"></span><span class="badge new">✨ 多周期统筹</span></div>
+              <div class="ov"><h4>3 次促排 · 历史一览</h4>
+                <table>
+                  <tr><td>第 1 次</td><td>取卵 3 → 囊胚 3 → 过筛 0</td><td class="when">2025.4</td></tr>
+                  <tr><td>第 2 次</td><td>取卵 4 → 囊胚 4 → 过筛 1</td><td class="when">2025.9</td></tr>
+                  <tr><td>第 3 次</td><td>取卵 3 → 囊胚 3 → 过筛 1（移植中）</td><td class="when">2026.2</td></tr>
+                </table>
+              </div>
+              <div class="alert tip"><span class="ai">🛡️</span><div>只<b>如实陈列你的历史数据</b>，不预测成功率、不对比"正常值"——预测属诊断，交给医生。<span class="badge new">✨ 守住红线</span></div></div>
+              <div class="ov" style="margin-top:10px;"><h4>用药历史 · 换药留痕</h4>
+                <table>
+                  <tr><td>2/18</td><td>促排方案 v1（果纳芬225）</td></tr>
+                  <tr><td>3/5</td><td>移植后方案 v2（加黄体支持三路）</td></tr>
+                  <tr><td>3/9</td><td>免疫科调整 v3（环孢素 Q8H）</td></tr>
+                </table>
+              </div>
+              <p class="note">小黑板擦了就没了——这里每次换药都留版本，对应痛点 P4 / P5。</p>
+            </div>
+
+            <!-- 我的：中文药品库 + 提醒设置 -->
+            <div class="panel" data-cn="mine">
+              <div class="seg">中文 IVF 药品库<span class="ln"></span><span class="badge new">✨ 国内空白</span></div>
+              <div class="libitem"><div class="ic vag">💠</div><div class="mn"><b>雪诺酮</b><div class="tag2">黄体酮阴道凝胶 · 黄体支持</div></div><span class="pill2">常温</span></div>
+              <div class="libitem"><div class="ic inj">💉</div><div class="mn"><b>黄体酮针</b><div class="tag2">肌注油剂 · 黄体支持</div></div><span class="pill2">⚠️不可冷藏</span></div>
+              <div class="libitem"><div class="ic inj">💉</div><div class="mn"><b>果纳芬</b><div class="tag2">促排 · 皮下注射</div></div><span class="pill2">需冷藏</span></div>
+              <div class="libitem"><div class="ic oral">💊</div><div class="mn"><b>芬吗通（白/灰片）</b><div class="tag2">白=雌二醇 · 灰=雌二醇+地屈孕酮</div></div><span class="pill2">看颜色</span></div>
+              <p class="note">中文药名 + 途径 + <b>储存提示</b>（通用提醒 App 没有、IVF 真需要）。剂量不预置，只录医嘱。标"以说明书为准"。</p>
+              <button class="btn ghost sm" onclick="openSheet('sheetRemind')">⏰ 提醒设置（含短信/夺命提醒）</button>
+            </div>
+
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tab active" onclick="cnTab('today','今日',this)"><span class="ti">📋</span>今日</div>
+          <div class="tab" onclick="cnTab('cal','周期',this)"><span class="ti">📅</span>周期</div>
+          <div class="tab" onclick="cnTab('treat','病程',this)"><span class="ti">🩺</span>病程</div>
+          <div class="tab" onclick="cnTab('mine','我的',this)"><span class="ti">👤</span>我的</div>
+        </div>
+
+        <!-- 弹层：录入（预填+确认） -->
+        <div class="overlay" id="sheetAdd">
+          <div class="sheet">
+            <div class="grip"></div>
+            <h3>录入 / 更新医生方案 <span class="badge new">✨ 预填+确认</span></h3>
+            <p class="sd">不让你一条条手填——扫一下医嘱单，自动识别，你只确认或改。</p>
+            <div class="scanhint">📷 拍 / 选医嘱单照片　·　🎙️ 语音说　·　📋 粘贴豆包整理</div>
+            <p class="sd" style="margin-top:10px;">已从你的医嘱单识别出 8 条，请确认：</p>
+            <div class="field"><div class="lbl">药名 · 途径</div><div class="val">环孢素 · 口服 <span class="edit">改</span></div></div>
+            <div class="ambig">
+              <div class="q">⚠️ 这条剂量有歧义，请确认 “早晚 50mg” 是：</div>
+              <div class="opt">
+                <div class="o sel" onclick="pick(this)">早晚<b>各</b>50mg<br>（各 2 片）</div>
+                <div class="o" onclick="pick(this)">早晚<b>共</b>50mg<br>（各 1 片）</div>
+              </div>
+              <p class="note" style="margin:8px 0 0;">这正是你那次差点吃错的地方。最好的做法——<b>在诊室当场让医生点一下确认</b>，回家就不用猜。</p>
+            </div>
+            <div class="field"><div class="lbl">停药条件</div><div class="val">查 HCG 后停（3/19） <span class="edit">改</span></div></div>
+            <button class="btn" onclick="closeSheet('sheetAdd')">✓ 全部确认，生成时间轴</button>
+            <button class="btn ghost sm" onclick="closeSheet('sheetAdd')">📲 生成一段，发给医生现场确认</button>
+          </div>
+        </div>
+
+        <!-- 弹层：复诊 overview -->
+        <div class="overlay" id="sheetOv">
+          <div class="sheet">
+            <div class="grip"></div>
+            <h3>复诊用药小结 <span class="badge new">✨ 给医生看</span></h3>
+            <p class="sd">换医院 / 建档 / 内分泌科问"你都吃了什么"，一页讲清，对你和医生都省事。</p>
+            <div class="ov"><h4>当前在用（移植后第 7 天）</h4>
+              <table>
+                <tr><td>黄体酮针</td><td>20mg 肌注 1次/日 · 已 7 天</td></tr>
+                <tr><td>雪诺酮</td><td>90mg 阴道 1次/日</td></tr>
+                <tr><td>达芙通</td><td>口服 3次/日</td></tr>
+                <tr><td>环孢素</td><td>50mg Q8H（免疫科）· 查HCG停</td></tr>
+                <tr><td>阿司匹林/二甲双胍</td><td>口服 · 内分泌科医嘱</td></tr>
+              </table>
+              <p class="note" style="margin-top:8px;">含<b>生殖科 + 免疫科 + 内分泌科</b>三方医嘱合并（痛点 P5），按"以医生为准"声明。</p>
+            </div>
+            <button class="btn" onclick="closeSheet('sheetOv')">📤 导出 / 出示给医生</button>
+          </div>
+        </div>
+
+        <!-- 弹层：提醒设置 -->
+        <div class="overlay" id="sheetRemind">
+          <div class="sheet">
+            <div class="grip"></div>
+            <h3>提醒设置 <span class="badge new">✨ 做到比通用更好</span></h3>
+            <p class="sd">提醒是刚需、必须做好。普通药用普通提醒；高危药（夜针）用"夺命连环"。</p>
+            <div class="field"><div class="val">📱 App 内提醒 + 手机日历同步 <span class="edit">开</span></div></div>
+            <div class="field"><div class="val">💬 短信提醒（收不到推送也能到） <span class="edit">开</span></div></div>
+            <div class="field"><div class="val">📞 夜针·夺命连环（参照钉钉DING）<span class="edit">仅高危</span></div><div class="lbl" style="margin-top:4px;">到点未打卡 → 反复响 + 短信，差几小时可能毁周期</div></div>
+            <button class="btn" onclick="closeSheet('sheetRemind')">保存</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <p class="foot">mockup v1 · 2026-06-18 · 仅交互示意，非最终 UI（UI 先出样子、后优化）。左机复原德国版，右机按深访洞察补全。<br>对应文档：移植后用药-痛点深访小结-v1.md</p>
+
+</div>
+
+<script>
+  function toggleAnno(){
+    document.body.classList.toggle('hideanno');
+    var t=document.getElementById('annoToggle');
+    var hidden=document.body.classList.contains('hideanno');
+    t.classList.toggle('on',!hidden);
+    t.textContent= hidden ? '○ 角标已隐藏（点击显示）' : '● 角标已显示（点击隐藏）';
+  }
+  function tg(el){ el.classList.toggle('done'); el.textContent=el.classList.contains('done')?'✓':''; el.closest('.med').classList.toggle('done'); }
+  function deTab(key,title,el){
+    el.closest('.tabbar').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    var ph=el.closest('.phone');
+    ph.querySelectorAll('[data-de]').forEach(p=>p.classList.toggle('show',p.dataset.de===key));
+    document.getElementById('deTitle').textContent=title;
+  }
+  function cnTab(key,title,el){
+    el.closest('.tabbar').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    var ph=el.closest('.phone');
+    ph.querySelectorAll('[data-cn]').forEach(p=>p.classList.toggle('show',p.dataset.cn===key));
+    document.getElementById('cnTitle').textContent=title;
+  }
+  function openSheet(id){ document.getElementById(id).classList.add('show'); }
+  function closeSheet(id){ document.getElementById(id).classList.remove('show'); }
+  function pick(el){ el.parentNode.querySelectorAll('.o').forEach(o=>o.classList.remove('sel')); el.classList.add('sel'); }
+  document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',function(e){ if(e.target===o) o.classList.remove('show'); }));
+</script>
+</body>
+</html>

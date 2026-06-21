@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用药提醒 MVP · 核心场景拆解骨架 v1</title>
+<style>
+  :root{
+    --bg:#FBFAF7; --paper:#FFFFFF; --ink:#2E3A38; --ink-soft:#5C6B68;
+    --line:#E8E3DB; --teal:#5B9A92; --teal-bg:#EAF3F1; --teal-deep:#3E7A72;
+    --amber:#B5824E; --amber-bg:#FAF1E6; --green:#6FA98C; --green-bg:#EDF5EF;
+    --rose:#B97A86; --shadow:0 1px 3px rgba(60,70,68,.06),0 4px 18px rgba(60,70,68,.05);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.7;font-size:15px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:920px;margin:0 auto;padding:44px 26px 90px;}
+  h1{font-size:25px;font-weight:700;letter-spacing:.3px;margin:0 0 6px;}
+  .sub{color:var(--ink-soft);font-size:13.5px;margin-bottom:26px;}
+  h2{font-size:18px;font-weight:700;margin:38px 0 14px;padding-left:11px;
+    border-left:4px solid var(--teal);}
+  h3{font-size:15px;font-weight:700;margin:20px 0 8px;color:var(--teal-deep);}
+  p{margin:9px 0;}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;box-shadow:var(--shadow);margin:14px 0;}
+  .lead{background:var(--teal-bg);border:1px solid #D5E7E3;border-radius:14px;
+    padding:18px 22px;margin:14px 0;font-size:15.5px;}
+  .lead b{color:var(--teal-deep);}
+  .pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 10px;
+    border-radius:20px;margin-right:6px;vertical-align:middle;}
+  .p-know{background:var(--green-bg);color:#3F7D63;border:1px solid #CDE6D7;}
+  .p-open{background:var(--amber-bg);color:#9A6A37;border:1px solid #EAD6BC;}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-soft);margin-top:8px;}
+  .redline{background:#FCF4F2;border:1px solid #EFD9D5;border-radius:12px;padding:14px 18px;margin:14px 0;}
+  .redline h3{color:var(--rose);margin-top:0;}
+  .redline ol{margin:6px 0 0;padding-left:20px;}
+  .redline li{margin:5px 0;}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.3px;background:var(--paper);
+    border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{background:#F4F1EB;font-weight:700;font-size:12.5px;color:var(--ink-soft);letter-spacing:.3px;}
+  tr:last-child td{border-bottom:none;}
+  .stage{font-weight:700;color:var(--teal-deep);white-space:nowrap;}
+  .hot{color:#B5824E;font-weight:700;}
+  .tier{border-radius:13px;padding:4px 0 6px;margin:14px 0;}
+  .tier-h{font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:9px;display:inline-block;margin-bottom:4px;}
+  .t-core{background:var(--teal-bg);color:var(--teal-deep);}
+  .t-light{background:var(--green-bg);color:#3F7D63;}
+  .t-later{background:#F1EEE8;color:var(--ink-soft);}
+  .f{margin:9px 0;padding-left:2px;}
+  .f b{color:var(--ink);}
+  .q{background:var(--amber-bg);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+    padding:6px 12px;margin:7px 0;font-size:13.2px;color:#7C5B30;}
+  .q::before{content:"❓ ";}
+  .data li{margin:6px 0;}
+  code{background:#F1EEE8;padding:1px 6px;border-radius:5px;font-size:12.5px;
+    font-family:"SF Mono",Consolas,monospace;color:#5C6B68;}
+  .reco{background:var(--green-bg);border:1px solid #CDE6D7;border-radius:12px;padding:14px 18px;margin:14px 0;}
+  .reco b{color:#3F7D63;}
+  .checklist{counter-reset:c;}
+  .checklist .item{background:var(--paper);border:1px solid var(--line);border-radius:11px;
+    padding:12px 16px 12px 46px;margin:9px 0;position:relative;box-shadow:var(--shadow);}
+  .checklist .item::before{counter-increment:c;content:counter(c);position:absolute;left:14px;top:11px;
+    width:22px;height:22px;background:var(--teal);color:#fff;border-radius:50%;
+    font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .foot{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);
+    color:var(--ink-soft);font-size:12.5px;}
+  .muted{color:var(--ink-soft);}
+  .tag{font-size:11.5px;color:var(--ink-soft);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>用药提醒 MVP · 核心场景拆解骨架</h1>
+  <div class="sub">v1 · 2026-06-14 · 从 <code>01-调研</code> 提炼 · <b>这是明天功能设计的起点,不是定稿</b></div>
+
+  <div class="card" style="margin-top:0">
+    <h3 style="margin-top:0">这份文档怎么用</h3>
+    <p>把"用药提醒"这个 MVP 按 <b>阶段 / 功能 / 体验</b> 三个切面摆开,外加一份直接喂给 coding 的<b>数据骨架</b>和一份<b>2 周 demo 的最小核心建议</b>。只摆骨架、留口子,明天我们一起往里填。</p>
+    <div class="legend">
+      <span><span class="pill p-know">✅ 已知</span> 调研已有共识,可直接用</span>
+      <span><span class="pill p-open">❓ 留口子</span> 待明天一起拍板,先不定死</span>
+    </div>
+  </div>
+
+  <div class="redline">
+    <h3>⛔ 三条贯穿红线(设计每一个功能时都要先过这三关)</h3>
+    <ol>
+      <li><b>只记录 + 提醒"医生定的方案",绝不自给医学/剂量建议</b> —— 一旦"推荐剂量/给用药建议"就可能落入二类医疗器械(NMPA)。守住"用户录入 → 我只排程+提醒+记录"。</li>
+      <li><b>确定性 &gt; LLM</b> —— 时间轴、提醒、记录全是确定性逻辑;每个关键数字都引导用户/医生 double check + 免责文案。</li>
+      <li><b>数据本地存储</b> —— 不上服务器,隐私即卖点;换机要靠导出备份(留接口)。</li>
+    </ol>
+  </div>
+
+  <h2>1 · 核心场景:一句话</h2>
+  <div class="lead">
+    把 IVF 患者手里"<b>多种药 × 多种途径 × 多个时段 × 还隔天被医生改</b>"的一堆乱药,
+    变成<b>一条清晰的「今日时间轴」</b> + <b>该打/该吃时准时提醒</b> + <b>医生改方案时一键更新</b>,
+    并能把这条时间轴<b>分享给伴侣、让伴侣搭把手提醒</b>。
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">北极星体验(Aha)</h3>
+    <p>用户第一次打开就看到:<br>
+    <span class="muted">「今天 3 件事 —— 早 8:00 补佳乐 · 晚 8:00 黄体酮针 · 睡前 雪诺酮」</span><br>
+    那种<b>「一堆乱药 → 一眼看懂今天该干嘛」的解脱感 = 掌控感</b>。这是整个产品最核心的情感承诺,demo 必须把这一下做出来。</p>
+  </div>
+
+  <h2>2 · 按阶段拆:用药真实地图</h2>
+  <p class="muted">用药贯穿 IVF 全程,但密度和痛点集中在三段:<span class="hot">促排</span>、<span class="hot">夜针</span>、<span class="hot">移植后黄体支持</span>。下表是"什么阶段、用什么药、管理到底乱在哪"。<span class="tag">(药名/储存来自调研,剂量一律不预置,由医生方案录入——见红线①)</span></p>
+  <table>
+    <tr><th style="width:14%">阶段</th><th style="width:30%">典型药物(途径)</th><th style="width:33%">用药管理乱在哪</th><th style="width:23%">提醒的特殊性</th></tr>
+    <tr><td class="stage">降调/预处理</td><td>达必佳等 GnRH-a(长效一针抵 18 天 / 短效每日皮下);保健品 CoQ10/DHEA/维D</td><td>长效 vs 短效搞不清;复诊时间有要求(如上午 9 点前)不提前告知</td><td>长效=单次大事件;短效=每日</td></tr>
+    <tr><td class="stage hot">促排(最痛)</td><td>果纳芬/丽申宝/尿促(皮下注射) + 可能拮抗剂</td><td>每天回家自打、"今天打几支/漏打怎么办";<b>剂量医生当天口头改"加半支/减到一支",无文字记录易记错</b></td><td>剂量隔天在变;多药并行</td></tr>
+    <tr><td class="stage hot">夜针/Trigger(最高危)</td><td>HCG 夜针</td><td>当天临时通知;<b>误差需 ≤10 分钟,差几小时可能整周期取消</b></td><td>精确到分钟 + 多重提醒 + 绝不可漏</td></tr>
+    <tr><td class="stage">取卵后</td><td>视情况少量;OHSS 观察</td><td>什么症状该去急诊边界不清</td><td>用药少,提醒压力低</td></tr>
+    <tr><td class="stage">移植·内膜准备</td><td>补佳乐/戊酸雌二醇/芬吗通(口服/阴道)</td><td>每 3-5 天调剂量;内膜薄反复推迟移植日</td><td>剂量动态变</td></tr>
+    <tr><td class="stage hot">移植后黄体支持<br>(密度最高)</td><td>黄体酮针(肌注,<b>油剂不能冷藏</b>) + 雪诺酮/安琪坦(阴道) + 地屈孕酮(口服)</td><td><b>三路并行、持续 14 天→验孕→孕 12 周</b>;副作用 vs 着床症状难分;"忘服孕酮怎么补"</td><td>多药多途径多时段、长周期、不可漏</td></tr>
+    <tr><td class="stage">早孕/保胎 <span class="tag">(v2)</span></td><td>保胎用药延续 + HCG/孕周</td><td>减药焦虑、何时转产科建档</td><td><span class="muted">v2 扩展,留口子</span></td></tr>
+  </table>
+  <div class="q">储存提示要进药品库:果纳芬类需冷藏、黄体酮油剂不能冷藏——这是通用提醒 App 完全没有、而 IVF 真实需要的细节。<b>药品库起步覆盖哪几种、要不要带储存提示?</b></div>
+
+  <h2>3 · 按功能拆:三层(核心命门 / 轻量进 v1 / 留口子扩展)</h2>
+
+  <div class="tier">
+    <span class="tier-h t-core">🎯 核心命门 · v1 必做(差异化所在,国外也没做好)</span>
+    <div class="f"><b>F1 多药/多途径/多时段排程 → 自动生成「今日时间轴」</b>:针/口服/阴道分类清晰,按早中晚摊开。这是 Aha 的载体。</div>
+    <div class="f"><b>F2 IVF 专用药品库</b>:预置常见药的 名称/途径/储存提示(<b>剂量不预置</b>,由方案录入)。一选就懂,不用手填,这是"懂 IVF"的体现。</div>
+    <div class="f"><b>F3 方案随阶段/医生变 → 「一键更新」而非重建</b>:旧方案作废、新方案生效、留变更记录。<span class="hot">← 最大差异化命门,也最难,demo 必须体现这一下。</span></div>
+    <div class="f"><b>F4 准时提醒(含夜针精确提醒)</b>:到点响。</div>
+    <div class="q">F4 技术硬骨头:安卓杀后台 / 提醒收不到,是国外 Bonzun 翻车的点。<b>第一版(web/小程序)能做到什么可靠性?夜针这种高危的要不要降级方案(如多重冗余提醒 + 提前确认)?</b></div>
+    <div class="q">F3 在 demo 里做到什么程度?真能改一套方案并刷新时间轴,还是先做"演示性"的一两步?</div>
+  </div>
+
+  <div class="tier">
+    <span class="tier-h t-light">🪶 轻量进 v1(成本低、情感价值高)</span>
+    <div class="f"><b>F5 服药打卡</b>(打了没/几点打):把"掌控感"变具体,也为依从性留数据。</div>
+    <div class="f"><b>F6 伴侣参与</b>:把今日用药分享给伴侣 / 伴侣帮提醒——是情感价值的一部分,不是次要功能。</div>
+    <div class="f"><b>F7 漏服/错打的"怎么办"提示</b>。</div>
+    <div class="q">F6 v1 做到哪一步:只读分享给伴侣,还是双向(伴侣能反过来提醒你)?</div>
+    <div class="q">F7 红线确认:漏服提示<b>只能给"联系你的医生"这类中性引导</b>,不能给"补服半支"之类医学补救建议——对吗?</div>
+  </div>
+
+  <div class="tier">
+    <span class="tier-h t-later">🌱 留口子 · v1 后 / v2(留接口,不进 v1)</span>
+    <div class="f muted">多周期病程档案 · 卵泡趋势 · HCG 追踪 · 报告解读 · 情绪陪伴重功能(冥想) · PGT 深分支 · 拍照识别医嘱 · 豆包粘贴导入 …</div>
+  </div>
+
+  <h2>4 · 按体验拆</h2>
+  <div class="card">
+    <div class="f"><b>第一眼 = Aha</b>:进 app 直接是"今日时间轴",不是空表格、不是先让你填一堆。</div>
+    <div class="f"><b>情感两支柱</b>:① 自主掌控(被一堆药推着走 → 我掌控我的治疗) ② 伴侣参与(让伴侣看见这份不易、搭把手)。</div>
+    <div class="f"><b>语气与视觉</b>:陪伴、不冰冷、不卖惨、不制造焦虑;温柔克制低饱和,避母婴卡通 + 避医疗冷。</div>
+    <div class="f"><b>onboarding 最短路径</b>(医生诊室触点设想):扫码 → 5 分钟录入方案 → 看到清晰提醒。</div>
+    <div class="q">v1 的录入方式选哪个起步:纯手动(从药品库选) / 豆包粘贴 / 拍照识别?——拍照 v1 可能太重,手动 + 药品库可能最稳。</div>
+  </div>
+
+  <h2>5 · 数据骨架草图(直接喂给 vibe coding 的地基)</h2>
+  <p class="muted">把数据结构先想对,是 vibe coding 不返工的关键。这是草图,留口子。</p>
+  <div class="card data">
+    <ul>
+      <li><code>Cycle 周期</code> —— 含 <code>stage 阶段</code>(降调/促排/移植/黄体支持…),支撑"方案随阶段变"。</li>
+      <li><code>Regimen 用药方案</code> —— <b>版本化</b>:医生一改 = 生成新版本、旧版存档。<span class="hot">这是 F3「一键更新」和"多周期档案"能不能长出来的地基。</span></li>
+      <li><code>MedItem 药物条目</code> —— { 药名 · 途径(针/口服/阴道) · 剂量+单位 · 频次 · 时间点[] · 起止日 · 储存提示 · 阶段标签 }。</li>
+      <li><code>DoseLog 服药记录</code> —— { 关联药物 · 计划时间 · 实际时间 · 状态(已服/漏服/跳过) },支撑 F5。</li>
+      <li><code>Reminder 提醒</code> —— 由 MedItem + 时间点生成。</li>
+      <li><code>Partner 伴侣</code> —— 只读分享 / 提醒,支撑 F6。</li>
+    </ul>
+    <div class="q">核心设计抉择:方案变更用<b>版本化</b>(新版本+存档)还是直接覆盖改?我建议版本化——多花一点、但 F3 和多周期档案都靠它。明天确认。</div>
+  </div>
+
+  <h2>6 · 2 周 demo 的"最小可跑通核心"</h2>
+  <p>诚实说:2 周 + 边学 coding,不可能全做。建议 demo <b>锁定一条"最痛 + 最能体现差异化"的主线跑通端到端</b>,其余留口子。先选一个<b>锚点阶段</b>:</p>
+  <table>
+    <tr><th style="width:20%">候选锚点</th><th style="width:44%">为什么选它</th><th style="width:36%">代价/难点</th></tr>
+    <tr><td class="stage">A 促排期</td><td>最痛节点;剂量天天改,最能体现 F3 差异化命门</td><td>夜针"分钟级 + 整周期作废"的可靠性,对新手 2 周是硬骨头</td></tr>
+    <tr><td class="stage hot">B 移植后黄体支持</td><td>用药密度最高、三路并行,最能体现 F1「乱药→时间轴」的 Aha;周期长、且与你当下早孕保胎连续,<b>最容易自己 dogfood</b></td><td>持续周期长,但提醒的"高危度"比夜针低,更适合新手起步</td></tr>
+  </table>
+  <div class="reco">
+    <b>我的倾向(供参考,不替你定)</b>:demo 锚点选 <b>B 黄体支持</b>——最直接把 Aha(三路并行 → 清晰时间轴)做出来、最容易自己用上、可靠性压力比夜针小,更适合 2 周新手。把<b>促排的"剂量动态调整"(F3)</b>作为第二个要展示的差异化亮点。
+    <p style="margin-bottom:0"><b>Demo 最小闭环</b>:从药品库选 3 种黄体支持药 → 录入一套方案 → 自动生成今日时间轴 → 准时提醒 → 打卡 → 医生改剂量时一键更新。<b>这条跑通 = demo 成立。</b></p>
+  </div>
+
+  <h2>7 · 留给明天的关键决策清单</h2>
+  <div class="checklist">
+    <div class="item"><b>demo 锚点阶段</b>:促排 / 黄体支持 / 都要?(我倾向黄体支持)</div>
+    <div class="item"><b>药品库起步覆盖几种、哪几种?</b> 建议你先把自己用过的药列出来,我们以此为种子。要不要带储存提示?</div>
+    <div class="item"><b>F3「方案更新」</b>在 demo 里做到什么程度(真能改 vs 演示性)?数据用版本化吗?</div>
+    <div class="item"><b>伴侣参与(F6)</b> v1 做到哪一步:只读分享 vs 双向提醒?</div>
+    <div class="item"><b>onboarding 录入方式</b> v1 起步选:手动+药品库 / 豆包粘贴 / 拍照?</div>
+    <div class="item"><b>技术路线</b>:web 先跑通 vs 直接小程序?提醒可靠性的降级方案?</div>
+    <div class="item"><b>红线确认</b>:漏服提示只给"联系医生"中性引导,不给医学补救建议——确认?</div>
+  </div>
+
+  <div class="foot">
+    来源:<code>MVP候选A-用药管理竞品与可行性.md</code> · <code>MVP思路对齐-v2-详细版.md</code> · <code>IVF全旅程-前段/中段.md</code> ·
+    项目 <code>CLAUDE.md</code>。本文件为 2026-06-14 讨论中产出的工作骨架,待明天功能设计对齐后,要点再回写 <code>进展与待办.md</code>。
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>备孕助手 · 产品规划主文档 v1</title>
+<style>
+  :root{
+    --bg:#FBFAF7; --paper:#FFFFFF; --ink:#2E3A38; --ink-soft:#5C6B68; --ink-faint:#9AA6A3;
+    --line:#E8E3DB; --teal:#5B9A92; --teal-bg:#EAF3F1; --teal-deep:#3E7A72;
+    --amber:#B5824E; --amber-bg:#FAF1E6; --green:#6FA98C; --green-bg:#EDF5EF;
+    --rose:#B97A86; --rose-bg:#FCF4F2; --blue:#7B8BB5; --blue-bg:#EEF1F8;
+    --shadow:0 1px 3px rgba(60,70,68,.07),0 6px 22px rgba(60,70,68,.06);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.7;font-size:15px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:940px;margin:0 auto;padding:44px 24px 90px;}
+  h1{font-size:26px;margin:0 0 4px;}
+  .sub{color:var(--ink-soft);font-size:13.5px;margin-bottom:8px;}
+  h2{font-size:19px;margin:40px 0 6px;padding-left:12px;border-left:4px solid var(--teal);}
+  .h2note{color:var(--ink-soft);font-size:13px;margin:0 0 12px 14px;}
+  h3{font-size:15.5px;color:var(--teal-deep);margin:18px 0 7px;}
+  p{margin:8px 0;}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);margin:12px 0;}
+  .lead{background:var(--teal-bg);border:1px solid #D5E7E3;border-radius:14px;padding:16px 20px;font-size:15.5px;margin:12px 0;}
+  .lead b{color:var(--teal-deep);}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:11px;vertical-align:middle;margin-left:6px;}
+  .p-must{background:var(--rose-bg);color:#9C5A63;} .p-should{background:var(--amber-bg);color:#8A6336;}
+  .p-could{background:var(--green-bg);color:#3F7D63;} .p-wont{background:#F1EEE8;color:var(--ink-faint);}
+  .feat{margin:7px 0;padding-left:4px;} .feat b{color:var(--ink);}
+  .feat .map{font-size:12px;color:var(--ink-faint);}
+  .tier{border-radius:13px;padding:12px 16px;margin:12px 0;border:1px solid var(--line);background:var(--paper);box-shadow:var(--shadow);}
+  .tier-h{font-weight:800;font-size:15px;margin-bottom:4px;}
+  .t-must .tier-h{color:#9C5A63;} .t-should .tier-h{color:#8A6336;}
+  .t-could .tier-h{color:#3F7D63;} .t-wont .tier-h{color:var(--ink-faint);}
+  .closing{background:var(--teal-bg);border:1px dashed #B6D8D0;border-radius:10px;padding:9px 13px;font-size:13.5px;color:var(--teal-deep);margin-top:8px;}
+
+  /* timeline */
+  .tl{position:relative;margin:18px 0 8px;padding-left:30px;}
+  .tl::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:var(--line);}
+  .stage{position:relative;margin:0 0 16px;}
+  .stage::before{content:"";position:absolute;left:-26px;top:5px;width:14px;height:14px;border-radius:50%;background:var(--teal);border:3px solid var(--bg);box-shadow:0 0 0 1px var(--line);}
+  .stage.now::before{background:var(--amber);}
+  .stage.gate::before{background:var(--rose);}
+  .stage .when{font-size:12px;font-weight:700;color:var(--teal-deep);}
+  .stage .ttl{font-size:15.5px;font-weight:700;margin:1px 0 2px;}
+  .stage .desc{font-size:13.5px;color:var(--ink-soft);}
+  .gatebox{background:var(--rose-bg);border:1px solid #EFD9D5;border-radius:8px;padding:5px 10px;font-size:12.5px;color:#9C5A63;margin-top:5px;display:inline-block;}
+
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.5px;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{background:#F4F1EB;font-size:12.5px;color:var(--ink-soft);font-weight:700;}
+  tr:last-child td{border-bottom:none;}
+  .signal{display:flex;gap:10px;align-items:flex-start;margin:8px 0;}
+  .signal .n{width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+
+  /* 场景地图 */
+  .map3{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0;}
+  .mcol{flex:1;min-width:200px;border-radius:13px;padding:13px 15px;border:1px solid var(--line);box-shadow:var(--shadow);}
+  .mcol.front{background:var(--blue-bg);border-color:#CBD4E8;}
+  .mcol.core{background:var(--teal-bg);border-color:#CDE6D7;}
+  .mcol.back{background:var(--green-bg);border-color:#CDE6D7;}
+  .mcol h4{margin:0 0 4px;font-size:14px;} .mcol .s{font-size:12.5px;color:var(--ink-soft);}
+  .engine{background:var(--paper);border:1px dashed var(--teal);border-radius:11px;padding:11px 15px;margin-top:10px;font-size:13.5px;color:var(--teal-deep);}
+
+  .dec{display:flex;gap:9px;margin:8px 0;} .dec .k{font-weight:700;min-width:120px;color:var(--ink);}
+  .foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--ink-faint);font-size:12.5px;}
+  .tag{font-size:11.5px;color:var(--ink-faint);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>备孕助手 · 产品规划主文档</h1>
+  <div class="sub">v1 · 2026-06-18 · IVF 用药管理（移植后切入）· 求职作品集 to C 产品 · <b>本文件 = 产品规划唯一主文档</b></div>
+  <div class="lead">
+    <b>北极星顺序原则：</b>一个场景（移植后）做到"<b>自己离不开 + 病友愿意用</b>"、拿到 PMF 信号，<b>才谈延伸</b>。
+    促排、孕期是 PMF 的奖励，不是预设的进度条。——这条贯穿下面所有取舍。
+  </div>
+
+  <h2>一 · MVP v1 范围（已锁定）</h2>
+  <div class="card">
+    <p><b>场景：只做「移植后黄体支持」单场景</b> —— 在其中同时演 ① 乱药→今日时间轴（Aha）② 方案随医生变·更新（用免疫科调药/停药演示）③ 复诊 overview。</p>
+    <p><b>周期：单周期跑通 + 数据结构按多周期/病程留接口。</b></p>
+    <p class="tag">为什么是移植后：用药密度最高（Aha 最强）· Cici 当下正用（真 dogfood）· 6/25 可向集爱医生展示 · 可靠性压力比促排夜针小，适合新手 coder。促排留作可嫁接的场景模块（见第五节）。</p>
+  </div>
+
+  <h2>二 · MVP 功能清单（移植后单场景）</h2>
+  <div class="h2note">每条标注对应痛点（P1–P7，详见《移植后用药-痛点深访小结-v1》）。优先级 = Must / Should / Could / Won't-v1。</div>
+
+  <div class="tier t-must">
+    <div class="tier-h">🎯 必做 Must —— demo 最小闭环，缺一不可</div>
+    <div class="feat"><b>① 中文 IVF 移植后药品库</b>：雪诺酮/黄体酮针/达芙通/芬吗通/环孢素… + 途径 + 储存提示；剂量不预置 <span class="map">〔差异化 F2 · 国内空白〕</span></div>
+    <div class="feat"><b>② 录入一套方案</b>：从药库选 + 填医嘱（剂量/时段/起止/停药条件）<span class="map">〔onboarding · P1/P2〕</span></div>
+    <div class="feat"><b>③ 自动生成「今日时间轴」</b>：晨/午/晚/睡前摊开，针/口服/阴道分清 <span class="map">〔F1 · Aha · P1〕</span></div>
+    <div class="feat"><b>④ 准时提醒</b>（基础 + 绑手机日历）<span class="map">〔刚需 table stakes〕</span></div>
+    <div class="feat"><b>⑤ 打卡</b>（已服 / 防重复服）<span class="map">〔F5 · P3〕</span></div>
+    <div class="feat"><b>⑥ 停药节点自动处理</b>：到期提醒/移除（"用药7天停""查HCG停"）<span class="map">〔F3-lite · P2〕</span></div>
+    <div class="closing">闭环一句话：<b>从药库选药 → 录方案 → 今日时间轴 → 到点提醒 → 打卡 → 医生停药自动更新。这条跑通 = demo 成立。</b></div>
+  </div>
+
+  <div class="tier t-should">
+    <div class="tier-h">💪 强烈想要 Should —— 差异化命门，时间够就进 demo</div>
+    <div class="feat"><b>⑦ 方案更新 + 版本留痕</b>：医生调药 → 一键更新时间轴、旧版存档 <span class="map">〔命门 F3 · P4/P5〕</span></div>
+    <div class="feat"><b>⑧ 一键复诊 overview</b>：当前在用一览 + 三方医嘱合并 <span class="map">〔P4/P5 · 对 6/25 集爱医生最加分〕</span></div>
+  </div>
+
+  <div class="tier t-could">
+    <div class="tier-h">🌱 锦上添花 Could —— 留接口/展示性，不强求</div>
+    <div class="feat">⑨ 库存提醒（按频率算余量、提前≥3天）〔P7〕　⑩ 短信/钉钉式强提醒　⑪ 多周期历史一览（展示性）〔P4〕　⑫ 伴侣分享 / 仪式感回顾〔F6/P6〕</div>
+  </div>
+
+  <div class="tier t-wont">
+    <div class="tier-h">🚫 v1 不做 Won't —— 明确砍，归 v2+</div>
+    <div class="feat">促排全流程 / 夜针分钟级 · 预填确认（扫描医嘱单 OCR，体验优化层）· 跨医生自动整合（v1 靠手动录入合并）· 拍照识别 / 报告解读 / 概率预测 / 变现</div>
+  </div>
+
+  <h2>三 · PMF 定义（什么程度算成功）</h2>
+  <div class="h2note">不是下载量。对这个小而垂直的产品，PMF 信号 = 下面三条出现任意一条。</div>
+  <div class="card">
+    <div class="signal"><div class="n">1</div><div><b>你自己（真 dogfood）</b>：移植后这段每天还在用、不回头翻小黑板。你就是最苛刻的第一用户。</div></div>
+    <div class="signal"><div class="n">2</div><div><b>病友</b>：用完愿意继续用、或主动推荐给别的姐妹。</div></div>
+    <div class="signal"><div class="n">3</div><div><b>医生</b>：愿意把它推荐给自己的病人（6/25 集爱是第一次试探）。</div></div>
+    <p class="tag" style="margin-top:6px;">这呼应 Cici 定的"体验即壁垒"——先把产品做到自己离不开，壁垒是水到渠成的副产品。</p>
+  </div>
+
+  <h2>四 · Roadmap 时间线</h2>
+  <div class="h2note">6 月压缩：MVP + quick demo 视频都在 6 月，早拿市场反应；延伸 GATE 在 PMF 之后。</div>
+  <div class="tl">
+    <div class="stage now">
+      <div class="when">① 6 月（即日–6/30）· 进行中</div>
+      <div class="ttl">MVP v1 出炉</div>
+      <div class="desc">移植后 Must 六条 + 复诊 overview 跑通；自己 dogfood。本周（W2）= demo 功能 + UI 第一版（走 web，最快出 demo）。<b>6/25 带版给集爱医生</b>；月底 <b>quick demo 视频发布</b>（录屏走查即可）。</div>
+    </div>
+    <div class="stage">
+      <div class="when">② 7 月初–中</div>
+      <div class="ttl">种子用户测试（轻维护）</div>
+      <div class="desc">这段重点在基金助理，备孕助手<b>不大改</b>；给 3-5 个复杂情况病友试用；小红书发"手搓 IVF 用药管家"过程帖收反馈。</div>
+    </div>
+    <div class="stage">
+      <div class="when">③ 8 月中–9 月初（W9–W12）</div>
+      <div class="ttl">按反馈迭代核心</div>
+      <div class="desc">只迭代移植后核心场景（UI 升级 + 补缺 + eval），<b>不扩场景</b>；把②的反馈落进去。</div>
+    </div>
+    <div class="stage">
+      <div class="when">④ 9 月初（W13）</div>
+      <div class="ttl">正式市场测试</div>
+      <div class="desc">录正式 demo 视频上线（QQ糖 / IVF 小号）；看反馈、留存、有没有人主动来求用。</div>
+      <div class="gatebox">🚪 PMF Gate：有自然用户 / 转发 / 求用 = 拿到 PMF 信号</div>
+    </div>
+    <div class="stage gate">
+      <div class="when">⑤ Q4 起（Phase 2，只做不学）</div>
+      <div class="ttl">场景延伸（PMF 后才启动）</div>
+      <div class="desc">嫁接<b>促排</b>（早期漏斗入口）→ 之后<b>孕期/产检</b>（向后延伸）。过程篇内容、部署平台、AI 模型、收费验证，也都压到这里。</div>
+      <div class="gatebox">⚠️ 门槛：④拿到 PMF 才启动；没拿到就继续打磨核心，不堆场景</div>
+    </div>
+  </div>
+
+  <h2>五 · 场景延伸地图（核心引擎 + 可嫁接模块）</h2>
+  <div class="h2note">促排不是"另一个产品"，是同一条旅程的更早入口。核心引擎阶段无关，每个场景 = 加一个药品库模块 + 该阶段特有功能。</div>
+  <div class="map3">
+    <div class="mcol front"><h4>← 向前延伸（更早获客）</h4><div class="s"><b>降调 · 促排 · 取卵</b><br>促排 = 早期漏斗入口，更早抓住用户 + 陪走完整条线；还能抓到"攒胚/全胚冷冻/反复促排不立即移植"的子人群（移植后场景抓不到）。<br><b>促排特有：剂量动态调整 · 夜针（分钟级）。PMF 后嫁接。</b></div></div>
+    <div class="mcol core"><h4>● 核心锚点（MVP v1）</h4><div class="s"><b>移植后黄体支持</b><br>用药密度最高、可 dogfood、demo 最强。先用它把引擎跑通、拿 PMF。</div></div>
+    <div class="mcol back"><h4>向后延伸（留存更久）→</h4><div class="s"><b>早孕保胎 · 孕期 · 产检</b><br>陪同一个人走更久，破"用完即走"。Cici 自己的旅程＝产品路线图。</div></div>
+  </div>
+  <div class="engine">⚙️ <b>核心引擎（阶段无关，所有场景共用）</b>：今日时间轴 · 提醒 · 打卡 · 方案版本化 · 病程档案。<br>→ 嫁接任何新场景 = 加「该阶段药品库模块 + 阶段特有功能」，不重写引擎。<b>这就是"促排能单独成场景、再嫁接进来"的底座。</b></div>
+
+  <h2>六 · 关键决策（今天共识）</h2>
+  <div class="card">
+    <div class="dec"><div class="k">提醒定位</div><div>刚需 / table stakes（必做且做好，可加短信/钉钉式强提醒），<b>但不是差异化卖点</b>。差异化在其之上的 6 件 IVF 专属事。</div></div>
+    <div class="dec"><div class="k">demo 平台</div><div><b>v1 走 web</b>（最快出 demo + 录视频，不卡小程序/App Store 审核）。正式部署平台（小程序/App Store）压到 PMF 后。</div></div>
+    <div class="dec"><div class="k">AI 模型</div><div>v1 几乎全是确定性逻辑 + 本地存储，<b>基本不调 LLM</b>——"用哪个模型/要不要国外服务器"不是现在的必答题，留到 v2（扫描医嘱单/报告解读）再选型。</div></div>
+    <div class="dec"><div class="k">UI</div><div>功能先落地；<b>拿德国 app mockup 当 UI 蓝本</b>（风格已对：温柔克制低饱和）；首页"今日时间轴"那屏要好看（demo hero 镜头），其余够用即可，别手搓样式（用组件库/让 AI 生成）。</div></div>
+    <div class="dec"><div class="k">收费</div><div>方向对（收费=验证价值），但<b>压到 PMF 后</b>——过早收费会拦住早期用户、污染 PMF 信号。v1 demo 免费。¥20 终生 / 年费留作 PMF 后的价格探针。门槛：小程序个人收不了款；App Store iOS-only + $99 + 医疗审核更严。</div></div>
+    <div class="dec"><div class="k">数据</div><div>本地存储、无后端（隐私即卖点 + 零成本）；换机靠导出备份（留接口）。</div></div>
+    <div class="dec"><div class="k">合规红线</div><div>只记录+提醒"医生定的方案"，绝不自给医学/剂量建议（避二类医疗器械）；确定性 > LLM；所有数字引导跟医生 double check + 免责。</div></div>
+  </div>
+
+  <h2>七 · 下一步：开写前先出「轻量 Build Spec」</h2>
+  <div class="card">
+    <p>这份规划文档够<b>对齐和启动</b>；但 vibe coding 前还需一份轻量 Build Spec（不是厚 PRD），补三样 AI 写代码最易跑偏的：</p>
+    <p><b>① 用户流程</b>（一屏到一屏）　<b>② 数据模型</b>（周期/方案/药条/打卡/提醒——定死它，AI 才不反复重画）　<b>③ 每个功能的验收标准</b>　＋ 技术栈（web/本地/无后端/v1 不调 LLM）＋ mockup 引用。</p>
+    <p><b>协作方式（non-technical 友好）</b>：开写前花一次 focus 把它落成 Build Spec → 然后<b>一个功能一个功能、薄切片地建</b>（先把"今日时间轴"用假数据渲染出来 → dogfood → 再加录入 → 再加提醒…），每切一片就自己用一次。</p>
+  </div>
+
+  <div class="foot">
+    主文档 v1 · 2026-06-18。配套：<code>移植后用药-痛点深访小结-v1.md</code>（痛点）· <code>德国IVFapp-中文复原+补全-mockup-v1.html</code>（UI 蓝本）· <code>用药提醒MVP-核心场景拆解骨架-v1.html</code>（早期骨架）· <code>痛点深访-说明书-v1.md</code>（方法）。<br>
+    本文件随讨论迭代；功能清单/roadmap 有调整时更新版本号。
+  </div>
+
+</div>
+</body>
+</html>

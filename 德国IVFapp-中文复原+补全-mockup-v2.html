@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>备孕助手 mockup v2 · 四 tab · 简洁版</title>
+<style>
+  :root{
+    --bg:#FCFBF9; --paper:#FFFFFF; --ink:#2E3A38; --ink-soft:#6B7975; --ink-faint:#A6AEAB;
+    --line:#EEEAE3; --teal:#5B9A92; --teal-bg:#EDF5F3; --teal-deep:#3E7A72;
+    --rose:#B97A86; --rose-bg:#FCF5F4; --amber:#B5824E; --new:#C58A4E; --new-bg:#FBF2E6;
+    --shadow:0 1px 2px rgba(60,70,68,.04),0 4px 16px rgba(60,70,68,.04);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;background:#EFEBE3;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.55;font-size:14px;-webkit-font-smoothing:antialiased;}
+  .page{max-width:520px;margin:0 auto;padding:22px 16px 60px;}
+  .pagehead{text-align:center;margin-bottom:12px;}
+  h1{font-size:19px;margin:0 0 4px;}
+  .intro{color:var(--ink-soft);font-size:12.5px;margin:0 auto;max-width:460px;}
+  .toggle{display:inline-flex;gap:6px;background:var(--paper);border:1px solid var(--line);border-radius:20px;
+    padding:5px 12px;font-size:12px;cursor:pointer;color:var(--teal-deep);box-shadow:var(--shadow);font-weight:600;margin-top:8px;}
+
+  .phone{width:358px;height:746px;margin:14px auto 0;background:var(--bg);border-radius:42px;border:9px solid #1f2624;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;display:flex;flex-direction:column;}
+  .notch{height:30px;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:2px 24px 0;font-size:11px;color:var(--ink-soft);font-weight:600;}
+  .screen{flex:1;overflow-y:auto;position:relative;}
+  .screen::-webkit-scrollbar{width:0;}
+  .appbar{padding:14px 20px 6px;}
+  .appbar h2{font-size:21px;margin:0;font-weight:700;letter-spacing:.3px;}
+  .appbar .sub{font-size:12px;color:var(--ink-faint);margin-top:2px;}
+  .body{padding:6px 18px 26px;}
+
+  .badge{font-size:9px;font-weight:700;padding:1px 6px;border-radius:9px;vertical-align:middle;background:var(--new-bg);color:var(--new);}
+  body.hideanno .badge{display:none;}
+
+  /* 通用：分组标题 */
+  .seg{font-size:11.5px;font-weight:700;color:var(--ink-faint);margin:22px 2px 8px;letter-spacing:.4px;}
+  .seg:first-child{margin-top:8px;}
+
+  /* 简洁倒数条 */
+  .countbar{margin:6px 0 4px;}
+  .countbar .d{font-size:15px;font-weight:700;}
+  .countbar .s{font-size:12px;color:var(--ink-soft);margin-top:1px;}
+  .countbar .bar{height:6px;border-radius:5px;background:#ECE7DF;overflow:hidden;margin-top:9px;}
+  .countbar .bar i{display:block;height:100%;width:50%;background:var(--teal);border-radius:5px;}
+  .calm{font-size:12.5px;color:var(--teal-deep);margin-top:9px;}
+  .prog{font-size:12.5px;color:var(--ink-soft);margin-top:14px;}
+  .prog b{color:var(--teal-deep);font-size:15px;}
+
+  /* 简洁列表行（德国风：白卡 + 细分隔，留白） */
+  .list{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;}
+  .row{display:flex;align-items:center;gap:12px;padding:13px 15px;border-bottom:1px solid var(--line);position:relative;}
+  .row:last-child{border-bottom:none;}
+  .row .tm{font-size:12px;color:var(--ink-faint);width:42px;flex:0 0 auto;font-variant-numeric:tabular-nums;}
+  .row .nm{flex:1;min-width:0;} .row .nm b{font-size:14.5px;font-weight:600;} .row .nm .s{font-size:11.5px;color:var(--ink-soft);}
+  .chk{width:28px;height:28px;border-radius:50%;border:2px solid #CFE0DB;flex:0 0 auto;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;transition:.18s;z-index:2;}
+  .chk.done{background:var(--teal);border-color:var(--teal);}
+  .row.done .nm b{text-decoration:line-through;color:var(--ink-faint);}
+  .halo{position:absolute;right:13px;top:50%;width:28px;height:28px;border-radius:50%;pointer-events:none;z-index:1;opacity:0;transform:translateY(-50%);}
+  .halo.go{animation:halo .7s ease-out;}
+  @keyframes halo{0%{opacity:.6;box-shadow:0 0 0 0 rgba(91,154,146,.45);transform:translateY(-50%) scale(.6);}
+    100%{opacity:0;box-shadow:0 0 0 24px rgba(91,154,146,0);transform:translateY(-50%) scale(1.5);}}
+  .spark{position:absolute;width:6px;height:6px;border-radius:2px;pointer-events:none;z-index:3;}
+
+  /* 细提示行 */
+  .hint{display:flex;gap:8px;font-size:12px;color:#9C5A63;background:var(--rose-bg);border:1px solid #F0E0DD;border-radius:12px;padding:9px 12px;margin:12px 0 0;}
+  .link{display:block;text-align:center;color:var(--teal-deep);font-size:13px;font-weight:600;margin-top:18px;cursor:pointer;}
+
+  /* 攻关：当前关卡 */
+  .quest{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);}
+  .quest .q{font-size:12px;color:var(--ink-faint);}
+  .quest .qn{font-size:17px;font-weight:700;margin:2px 0 10px;}
+  .quest .bar{height:7px;border-radius:5px;background:#ECE7DF;overflow:hidden;}
+  .quest .bar i{display:block;height:100%;width:50%;background:var(--teal);border-radius:5px;}
+  .quest .qs{font-size:12px;color:var(--ink-soft);margin-top:7px;}
+
+  .stat{display:flex;justify-content:space-around;text-align:center;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:15px 8px;box-shadow:var(--shadow);}
+  .stat .n{font-size:22px;font-weight:800;color:var(--teal-deep);} .stat .l{font-size:10.5px;color:var(--ink-soft);margin-top:2px;}
+
+  /* 印章 */
+  .stamps{display:flex;gap:10px;flex-wrap:wrap;}
+  .stamp{flex:1;min-width:64px;text-align:center;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 6px;box-shadow:var(--shadow);}
+  .stamp .e{font-size:22px;filter:grayscale(0);} .stamp.lock .e{filter:grayscale(1);opacity:.35;}
+  .stamp .t{font-size:10.5px;color:var(--ink-soft);margin-top:4px;} .stamp.lock .t{color:var(--ink-faint);}
+
+  /* 历史战绩行 */
+  .hrow{display:flex;justify-content:space-between;font-size:13px;padding:11px 15px;border-bottom:1px solid var(--line);}
+  .hrow:last-child{border-bottom:none;} .hrow .w{color:var(--ink-faint);font-size:11.5px;}
+
+  .discl{font-size:11px;color:var(--ink-faint);background:var(--teal-bg);border-radius:10px;padding:8px 11px;margin-top:10px;}
+
+  /* 我的：设置行 */
+  .mrow{display:flex;align-items:center;gap:12px;padding:14px 15px;border-bottom:1px solid var(--line);cursor:pointer;}
+  .mrow:last-child{border-bottom:none;}
+  .mrow .mi{font-size:18px;width:24px;text-align:center;} .mrow .mt{flex:1;font-size:14px;} .mrow .mv{font-size:12px;color:var(--ink-faint);}
+  .mrow .ch{color:var(--ink-faint);font-size:14px;}
+
+  /* tabbar */
+  .tabbar{flex:0 0 auto;height:60px;background:var(--paper);border-top:1px solid var(--line);display:flex;}
+  .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;color:var(--ink-faint);cursor:pointer;}
+  .tab.active{color:var(--teal-deep);font-weight:700;} .tab .ti{font-size:18px;}
+  .panel{display:none;} .panel.show{display:block;}
+
+  /* overlay */
+  .overlay{position:absolute;inset:0;background:rgba(40,50,48,.42);display:none;align-items:center;justify-content:center;z-index:30;padding:18px;}
+  .overlay.show{display:flex;}
+  .modal{background:var(--paper);width:100%;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);}
+  .modal .top{background:var(--teal-bg);padding:11px 16px;display:flex;justify-content:space-between;align-items:center;}
+  .modal .top b{color:var(--teal-deep);font-size:14px;} .modal .top .x{color:var(--ink-faint);font-size:11.5px;}
+  .modal .ct{padding:18px;text-align:center;}
+  .bigchk{width:60px;height:60px;border-radius:18px;background:var(--teal-bg);color:var(--teal);font-size:32px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;}
+  .modal h3{margin:0 0 3px;font-size:16px;} .modal .d{font-size:12px;color:var(--ink-soft);margin-bottom:12px;}
+  .say{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px;font-size:13px;font-family:inherit;resize:none;background:var(--bg);}
+  .acts{display:flex;gap:9px;margin-top:12px;} .acts button{flex:1;border-radius:11px;padding:10px;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:inherit;}
+  .a-undo{background:var(--bg);color:var(--ink-soft);border:1px solid var(--line)!important;} .a-ok{background:var(--teal);color:#fff;}
+  .sheet{background:var(--bg);width:100%;max-height:88%;border-radius:20px;overflow-y:auto;padding:8px 16px 22px;align-self:flex-end;}
+  .sheet::-webkit-scrollbar{width:0;} .grip{width:36px;height:4px;background:var(--line);border-radius:3px;margin:8px auto 6px;}
+  .sheet h3{font-size:16px;margin:4px 2px 2px;} .sheet .sd{font-size:11.5px;color:var(--ink-soft);margin:0 2px 10px;}
+  .entry{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 13px;margin:8px 0;font-size:12.5px;box-shadow:var(--shadow);}
+  .entry .w{color:var(--ink-faint);font-size:10.5px;margin-bottom:2px;}
+  .letter{background:#FFFDF8;border:1px solid #EAD9C2;border-radius:14px;padding:16px;margin-top:10px;font-size:13.5px;line-height:1.9;color:#5C4A33;white-space:pre-wrap;min-height:30px;}
+  .scard{background:var(--teal-bg);border:1px solid #D7E8E3;border-radius:16px;padding:18px;text-align:center;}
+  .scard .wk{font-size:21px;font-weight:800;color:var(--teal-deep);} .scard .ms{font-size:12.5px;color:var(--ink-soft);margin-top:6px;}
+  .btn{display:block;width:100%;text-align:center;background:var(--teal);color:#fff;border:none;border-radius:13px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin:12px 0 0;font-family:inherit;}
+  .btn.ghost{background:var(--paper);color:var(--teal-deep);border:1px solid #CFE0DB;}
+  .note{font-size:11px;color:var(--ink-faint);margin:8px 2px;}
+  .foot{text-align:center;color:var(--ink-faint);font-size:11.5px;margin-top:20px;}
+</style>
+</head>
+<body class="anno">
+<div class="page">
+  <div class="pagehead">
+    <h1>备孕助手 mockup v2 · 简洁版（4 tab）</h1>
+    <p class="intro">向德国 app 看齐：白卡 + 留白 + 细分隔，一屏只干一件事。底部 4 tab 可切：<b>今日 / 周期 / 攻关 / 我的</b>。点药行右侧圆圈打卡（光晕+音效）。</p>
+    <span class="toggle" onclick="document.body.classList.toggle('hideanno')">显示/隐藏 ✨v2 角标</span>
+  </div>
+
+  <div class="phone">
+    <div class="notch"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="screen">
+      <div class="appbar"><h2 id="title">今日</h2><div class="sub" id="subt">移植后第 7 天 · 6月21日 周六</div></div>
+      <div class="body">
+
+        <!-- 今日 -->
+        <div class="panel show" id="p-today">
+          <div class="countbar">
+            <div class="d">距验孕还有 7 天 <span class="badge">✨</span></div>
+            <div class="s">两周等待 · 已过一半</div>
+            <div class="bar"><i></i></div>
+            <div class="calm">💚 今天的药交给我盯着，你安心。</div>
+            <div class="prog">今天 <b>5/8</b> 完成 · 还有 <span id="left">3</span> 件</div>
+          </div>
+
+          <div class="seg">中午 11:30–15:00</div>
+          <div class="list">
+            <div class="row"><span class="tm">14:30</span><div class="nm"><b>达芙通</b><div class="s">口服 1 片</div></div><span class="halo"></span><div class="chk" onclick="checkin(this)"></div></div>
+            <div class="row"><span class="tm">15:00</span><div class="nm"><b>雪诺酮</b><div class="s">阴道 1 支</div></div><span class="halo"></span><div class="chk" onclick="checkin(this)"></div></div>
+          </div>
+
+          <div class="seg">晚上</div>
+          <div class="list">
+            <div class="row"><span class="tm">22:00</span><div class="nm"><b>环孢素</b><div class="s">晚 50mg · 2 片</div></div><span class="halo"></span><div class="chk" onclick="checkin(this)"></div></div>
+          </div>
+
+          <div class="hint">⏳&nbsp;环孢素还有 3 天停药（查 HCG 后停），到期我提醒你。</div>
+          <span class="link" onclick="openOv('ovLetter')">💌 给宝宝说一句</span>
+        </div>
+
+        <!-- 周期 -->
+        <div class="panel" id="p-cycle">
+          <div class="seg">本周期 · 移植后黄体支持</div>
+          <div class="list">
+            <div class="hrow"><span>移植日</span><span class="w">6月14日 ✓</span></div>
+            <div class="hrow"><span>黄体支持中</span><span class="w">第 7 / 14 天</span></div>
+            <div class="hrow"><span>环孢素停药</span><span class="w">6月24日</span></div>
+            <div class="hrow"><span>验孕（查 HCG）</span><span class="w">6月28日 · 距 7 天</span></div>
+          </div>
+
+          <div class="seg">当前用药方案 <span class="badge">医生改→一键更新</span></div>
+          <div class="list">
+            <div class="hrow"><span>黄体酮针</span><span class="w">肌注 1/日</span></div>
+            <div class="hrow"><span>雪诺酮</span><span class="w">阴道 1/日</span></div>
+            <div class="hrow"><span>达芙通</span><span class="w">口服 3/日</span></div>
+            <div class="hrow"><span>环孢素（免疫科）</span><span class="w">50mg Q8H · 查HCG停</span></div>
+          </div>
+          <button class="btn ghost" onclick="alert('演示：扫医嘱单/选药库→预填→你只确认或改→时间轴刷新，旧方案存档')">医生改方案了？一键更新 <span class="badge">命门 F3</span></button>
+        </div>
+
+        <!-- 攻关（原病程） -->
+        <div class="panel" id="p-fight">
+          <div class="seg">当前关卡</div>
+          <div class="quest">
+            <div class="q">好孕之路 · 攻关中</div>
+            <div class="qn">移植后黄体支持</div>
+            <div class="bar"><i></i></div>
+            <div class="qs">第 7 / 14 天 · 稳稳地，我们一起等 💚</div>
+          </div>
+
+          <div class="seg">为 TA 攒的 <span class="badge">✨</span></div>
+          <div class="stat">
+            <div><div class="n">7</div><div class="l">坚持天数</div></div>
+            <div><div class="n">32</div><div class="l">完成用药</div></div>
+            <div><div class="n">14</div><div class="l">打针(支)</div></div>
+          </div>
+
+          <div class="seg">里程碑印章 <span class="badge">✨</span></div>
+          <div class="stamps">
+            <div class="stamp"><div class="e">🌱</div><div class="t">移植日</div></div>
+            <div class="stamp lock"><div class="e">🔬</div><div class="t">验孕日</div></div>
+            <div class="stamp lock"><div class="e">🎓</div><div class="t">孕12周毕业</div></div>
+          </div>
+
+          <div class="seg">历史战绩 · 如实记录</div>
+          <div class="list">
+            <div class="hrow"><span>第 1 次促排</span><span class="w">取卵3→囊胚3→过筛0 · 2025.4</span></div>
+            <div class="hrow"><span>第 2 次促排</span><span class="w">取卵4→囊胚4→过筛1 · 2025.9</span></div>
+            <div class="hrow"><span>第 3 次（移植中）</span><span class="w">取卵3→囊胚3→过筛1 · 2026.2</span></div>
+          </div>
+          <div class="discl">🛡️ 只如实陈列你的数据，不预测成功率、不对比"正常值"——那属诊断，交给医生。</div>
+          <span class="link" onclick="openOv('ovLetter')">💌 时光信箱 · 给宝宝的话</span>
+        </div>
+
+        <!-- 我的 -->
+        <div class="panel" id="p-mine">
+          <div class="seg">用药</div>
+          <div class="list">
+            <div class="mrow"><span class="mi">💊</span><span class="mt">中文 IVF 药品库</span><span class="mv">含储存提示</span><span class="ch">›</span></div>
+            <div class="mrow" onclick="openOv('ovRemind')"><span class="mi">⏰</span><span class="mt">提醒设置</span><span class="mv">短信/夺命</span><span class="ch">›</span></div>
+          </div>
+          <div class="seg">陪伴 & 共享</div>
+          <div class="list">
+            <div class="mrow" onclick="openOv('ovShare')"><span class="mi">👫</span><span class="mt">分享给老公</span><span class="mv badge">✨看孕周</span><span class="ch">›</span></div>
+            <div class="mrow" onclick="openOv('ovLetter')"><span class="mi">💌</span><span class="mt">时光信箱</span><span class="mv badge">✨</span><span class="ch">›</span></div>
+          </div>
+          <div class="seg">数据</div>
+          <div class="list">
+            <div class="mrow"><span class="mi">📄</span><span class="mt">复诊用药小结（导出）</span><span class="ch">›</span></div>
+            <div class="mrow"><span class="mi">☁️</span><span class="mt">备份 / 换机导出</span><span class="mv">本地存储</span><span class="ch">›</span></div>
+          </div>
+          <div class="note">数据存你手机本地，隐私即卖点 · 无广告。</div>
+        </div>
+
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tab active" onclick="tab('today','今日','移植后第 7 天 · 6月21日 周六',this)"><span class="ti">📋</span>今日</div>
+      <div class="tab" onclick="tab('cycle','周期','本周期 · 移植后黄体支持',this)"><span class="ti">📅</span>周期</div>
+      <div class="tab" onclick="tab('fight','攻关','好孕之路 · 一起闯关',this)"><span class="ti">🏔️</span>攻关</div>
+      <div class="tab" onclick="tab('mine','我的','',this)"><span class="ti">👤</span>我的</div>
+    </div>
+
+    <!-- 打卡成功 -->
+    <div class="overlay" id="ovCheck"><div class="modal">
+      <div class="top"><b>打卡成功</b><span class="x" onclick="closeOv('ovCheck')">14:30</span></div>
+      <div class="ct"><div class="bigchk">✓</div>
+        <h3>移植后第 7 天，今天稳稳的 💪</h3>
+        <div class="d">已累计坚持 7 天 · 记录此刻，攒给宝宝</div>
+        <textarea class="say" rows="2" placeholder="说一句给宝宝的话…（可选）"></textarea>
+        <div class="acts"><button class="a-undo" onclick="closeOv('ovCheck')">撤销</button><button class="a-ok" onclick="closeOv('ovCheck')">完成</button></div>
+      </div>
+    </div></div>
+
+    <!-- 时光信箱 -->
+    <div class="overlay" id="ovLetter"><div class="sheet">
+      <div class="grip"></div>
+      <h3>时光信箱 · 给宝宝的话 <span class="badge">✨</span></h3>
+      <p class="sd">每天攒一句，到验孕/毕业/出生，AI 编织成一封信交给 TA。（demo：已攒 4 条）</p>
+      <div class="entry"><div class="w">移植后第 1 天</div>今天把你放进了妈妈身体里，紧张又期待。</div>
+      <div class="entry"><div class="w">移植后第 3 天</div>打针有点疼，但想到是为了你，就不怕了。</div>
+      <div class="entry"><div class="w">移植后第 5 天</div>差点忘了一颗药，吓出一身汗，还好 app 提醒了。</div>
+      <div class="entry"><div class="w">移植后第 7 天</div>两周等待过半，妈妈每天都好好坚持。</div>
+      <button class="btn" onclick="genLetter()">✨ 生成给宝宝的信</button>
+      <div class="letter" id="letterBox"></div>
+      <button class="btn ghost" onclick="closeOv('ovLetter')">关闭</button>
+    </div></div>
+
+    <!-- 伴侣分享 -->
+    <div class="overlay" id="ovShare"><div class="sheet">
+      <div class="grip"></div>
+      <h3>分享给老公 <span class="badge">✨</span></h3>
+      <p class="sd">老公最关心"到哪一步了"——先让他看到孕周/进展+节点。</p>
+      <div class="scard"><div class="wk">移植后第 7 天</div><div class="ms">距验孕还有 7 天 · 今天 5/8 完成<br>这周妈妈坚持打了 7 针 💪</div></div>
+      <p class="note">分享进展+这份不易，不是裸数据；敏感医疗细节默认不外露。</p>
+      <button class="btn" onclick="closeOv('ovShare')">📤 发给老公</button>
+    </div></div>
+
+    <!-- 提醒设置 -->
+    <div class="overlay" id="ovRemind"><div class="sheet">
+      <div class="grip"></div>
+      <h3>提醒设置 <span class="badge">比通用更好</span></h3>
+      <p class="sd">提醒是刚需、永久免费不设墙。高危药用"夺命连环"。</p>
+      <div class="list">
+        <div class="mrow"><span class="mi">📱</span><span class="mt">App + 手机日历同步</span><span class="mv">开</span></div>
+        <div class="mrow"><span class="mi">💬</span><span class="mt">短信提醒（收不到推送也到）</span><span class="mv">开</span></div>
+        <div class="mrow"><span class="mi">📞</span><span class="mt">夜针·夺命连环（钉钉式）</span><span class="mv">仅高危</span></div>
+      </div>
+      <button class="btn" onclick="closeOv('ovRemind')">保存</button>
+    </div></div>
+
+  </div>
+  <p class="foot">mockup v2（简洁版·4 tab）· 2026-06-21 · 点药行圆圈体验打卡。v1 双机版仍保留作对比。</p>
+</div>
+
+<script>
+  let ac;
+  function ding(){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const t=ac.currentTime;
+    [[660,0],[880,.09]].forEach(([f,d])=>{const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=f;
+    o.connect(g);g.connect(ac.destination);g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(.16,t+d+.02);
+    g.gain.exponentialRampToValueAtTime(.0001,t+d+.5);o.start(t+d);o.stop(t+d+.55);});}catch(e){}}
+  function checkin(el){
+    if(el.classList.contains('done'))return;
+    el.classList.add('done');el.textContent='✓';el.closest('.row').classList.add('done');
+    ding();if(navigator.vibrate)navigator.vibrate(16);
+    const halo=el.parentNode.querySelector('.halo');halo.classList.remove('go');void halo.offsetWidth;halo.classList.add('go');
+    const row=el.closest('.row');const cols=['#6FA98C','#B5824E','#5B9A92','#B97A86','#E9C97A'];
+    for(let i=0;i<8;i++){const s=document.createElement('span');s.className='spark';s.style.background=cols[i%5];
+      s.style.right='13px';s.style.top='50%';row.appendChild(s);const a=(Math.PI*2/8)*i,dist=26+i*2;
+      s.animate([{transform:'translate(0,-50%) scale(1)',opacity:1},
+        {transform:`translate(${-Math.cos(a)*dist}px,calc(-50% - ${Math.sin(a)*dist}px)) scale(.3)`,opacity:0}],
+        {duration:620,easing:'cubic-bezier(.2,.7,.3,1)'});setTimeout(()=>s.remove(),650);}
+    const lf=document.getElementById('left');if(lf){let n=+lf.textContent;if(n>0)lf.textContent=n-1;}
+    setTimeout(()=>openOv('ovCheck'),500);
+  }
+  function tab(key,title,sub,el){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
+    document.getElementById('p-'+key).classList.add('show');
+    document.getElementById('title').textContent=title;
+    document.getElementById('subt').textContent=sub;
+    el.closest('.phone').querySelector('.screen').scrollTop=0;
+  }
+  function openOv(id){document.getElementById(id).classList.add('show');}
+  function closeOv(id){document.getElementById(id).classList.remove('show');}
+  function genLetter(){
+    const txt="给我的小芽：\n\n这是你来到妈妈身体里的第 7 天。\n这一周，妈妈每天按时吃药打针，一次都没落下——有一天差点忘了一颗，吓出一身汗，但还是稳稳地补上了。\n两周等待已经过了一半。无论结果怎样，妈妈想让你知道：为了你，这些辛苦都值得。\n\n稳稳地，我们一起等。\n—— 妈妈，移植后第 7 天";
+    const b=document.getElementById('letterBox');b.textContent='';let i=0;
+    (function ty(){if(i<=txt.length){b.textContent=txt.slice(0,i);i+=2;setTimeout(ty,16);}})();
+  }
+  document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
+</script>
+</body>
+</html>
