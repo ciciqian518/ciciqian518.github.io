@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>备孕助手 · mockup 整合工作台 v1</title>
+<style>
+  :root{
+    --teal:#5B9A92; --teal-d:#3f7d75; --bg:#FBFAF7; --teal-bg:#EAF3F1;
+    --ink:#2f3a38; --soft:#7c8784; --line:#e6e1d8; --card:#fff;
+    --green:#5aa978; --amber:#c98a2e; --amber-bg:#fbf2e2; --red:#c0584f;
+    --sel:#5B9A92; --sel-bg:#e6f1ee;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#f1ece3;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.5;font-size:14px;padding:26px 16px 140px}
+  .wrap{max-width:1080px;margin:0 auto}
+  header{text-align:center;margin-bottom:18px}
+  header h1{font-size:22px;color:var(--teal-d)}
+  header p{font-size:13px;color:var(--soft);margin-top:5px}
+  .how{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;font-size:13px;color:#5f6a67;margin-bottom:22px}
+  .how b{color:var(--teal-d)}
+  .how .step{margin:3px 0}
+  /* flow map */
+  .flowbox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:24px}
+  .flowbox h2{font-size:15px;color:var(--teal-d);margin-bottom:12px}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:7px;font-size:12.5px}
+  .scr{background:var(--teal-bg);color:var(--teal-d);border:1px solid #cfe4df;border-radius:9px;padding:6px 11px;font-weight:600}
+  .scr.pop{background:#faf3e6;color:var(--amber);border-color:#ecd9b3}
+  .arr{color:#b9b3a6}
+  .flegend{font-size:11.5px;color:var(--soft);margin-top:10px}
+  /* screen section */
+  .sec{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:18px}
+  .sec>h2{font-size:17px;color:var(--ink);display:flex;align-items:center;gap:8px;margin-bottom:3px}
+  .sec>h2 .badge{font-size:11px;background:var(--teal-bg);color:var(--teal-d);padding:2px 9px;border-radius:20px;font-weight:600}
+  .sec>.sub{font-size:12.5px;color:var(--soft);margin-bottom:12px}
+  .slot{margin:14px 0}
+  .slot .sl-h{font-size:13px;font-weight:700;color:var(--teal-d);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .slot .pick{font-size:10.5px;font-weight:600;padding:1px 8px;border-radius:20px;background:#f0ede5;color:var(--soft)}
+  .pick.one{background:#eef1f6;color:#5a6b8a} .pick.many{background:#f0f6ee;color:#5a7a55}
+  .opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:9px}
+  .opt{border:1.5px solid var(--line);border-radius:11px;padding:10px 12px;cursor:pointer;transition:.12s;background:#fff;position:relative}
+  .opt:hover{border-color:#c9c2b3}
+  .opt.sel{border-color:var(--sel);background:var(--sel-bg);box-shadow:0 0 0 2px rgba(91,154,146,.15)}
+  .opt .id{font-size:11px;font-weight:800;color:var(--teal-d);letter-spacing:.5px}
+  .opt .src{font-size:9.5px;color:#fff;background:#b9b3a6;border-radius:5px;padding:1px 6px;margin-left:6px;font-weight:600;vertical-align:1px}
+  .src.v1{background:#a98c6b} .src.v2{background:#6b8aa9} .src.v3{background:#7aa98c} .src.v4{background:#9a7aa9}
+  .src.竞品{background:#c98a2e} .src.建议{background:#5aa978} .src.命门{background:#c0584f}
+  .opt .nm{font-weight:600;margin:4px 0 2px;font-size:13.5px}
+  .opt .ds{font-size:11.5px;color:var(--soft);line-height:1.45}
+  .opt .tick{position:absolute;top:9px;right:10px;width:18px;height:18px;border-radius:50%;border:1.5px solid #d4cebf;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px}
+  .opt.sel .tick{background:var(--sel);border-color:var(--sel)}
+  .note-i{font-size:11.5px;color:var(--amber);background:var(--amber-bg);border:1px solid #ecd9b3;border-radius:9px;padding:7px 11px;margin-top:8px}
+  /* 痛点 checklist */
+  .pains{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:18px}
+  .pains h2{font-size:17px;margin-bottom:2px}
+  .pains .sub{font-size:12.5px;color:var(--soft);margin-bottom:12px}
+  .pgrp{margin:10px 0}
+  .pgrp .gh{font-size:12px;font-weight:700;color:var(--teal-d);margin-bottom:6px}
+  .pitem{display:flex;gap:9px;align-items:flex-start;padding:6px 8px;border-radius:8px;cursor:pointer;font-size:12.5px}
+  .pitem:hover{background:#faf8f3}
+  .pitem .pb{width:17px;height:17px;border-radius:5px;border:1.5px solid #cfc8b8;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px}
+  .pitem.on .pb{background:var(--teal);border-color:var(--teal)}
+  .pitem.off{opacity:.4;text-decoration:line-through;text-decoration-color:#c9b}
+  .star{color:var(--red);font-weight:700}
+  .mtag{font-size:9.5px;padding:1px 6px;border-radius:5px;font-weight:700;margin-left:4px}
+  .m-must{background:#fae9e7;color:var(--red)} .m-should{background:#eef1f6;color:#5a6b8a}
+  .m-could{background:#f0f6ee;color:#5a7a55} .m-v2{background:#f0ede5;color:var(--soft)}
+  /* summary */
+  .summary{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.97);border-top:1px solid var(--line);
+    box-shadow:0 -4px 20px rgba(0,0,0,.08);padding:10px 18px;z-index:50}
+  .summary .row{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .summary .cnt{font-size:13px;color:var(--ink);font-weight:600;white-space:nowrap}
+  .summary .cnt b{color:var(--teal-d);font-size:16px}
+  .summary .picks{flex:1;font-size:11.5px;color:var(--soft);max-height:46px;overflow-y:auto;line-height:1.7}
+  .summary .picks span{background:var(--sel-bg);color:var(--teal-d);border-radius:5px;padding:1px 6px;margin:0 3px 3px 0;display:inline-block;font-weight:600}
+  .btn{background:var(--teal);color:#fff;border:none;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+  .btn.ghost{background:#fff;border:1.5px solid var(--line);color:var(--soft)}
+  .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:rgba(47,58,56,.95);color:#fff;
+    font-size:13px;padding:10px 20px;border-radius:20px;opacity:0;transition:.3s;z-index:60;pointer-events:none}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>备孕助手 · mockup 整合工作台 v1</h1>
+  <p>把 4 版 mockup + 讨论 + 竞品参考的候选组件都摆出来 · 你点菜 · 我组装 final</p>
+</header>
+
+<div class="how">
+  <div class="step"><b>怎么用：</b>每个屏分成几个"槽位"。<b>蓝标 = 二选一</b>（点一个会取消同槽其他）；<b>绿标 = 可多选/要不要加</b>。点亮你想要的。</div>
+  <div class="step">痛点清单默认<b>全留</b>（情愿多）——勾掉你想砍的做减法。</div>
+  <div class="step">点完按右下角 <b>「复制我的选择」</b>，把文字发我，我照单组装。拿不准的槽位留空，我给建议。</div>
+</div>
+
+<!-- user flow -->
+<div class="flowbox">
+  <h2>🗺️ 跳转地图（user flow）</h2>
+  <div class="flow">
+    <span class="scr">onboarding 录方案</span><span class="arr">→</span>
+    <span class="scr">① 今日</span><span class="arr">⇄</span>
+    <span class="scr">② 周期</span><span class="arr">⇄</span>
+    <span class="scr">③ 攻关</span><span class="arr">⇄</span>
+    <span class="scr">④ 我的</span>
+  </div>
+  <div class="flow" style="margin-top:8px">
+    <span class="arr">今日页点：</span>
+    <span class="scr">顶部卡</span><span class="arr">→</span><span class="scr pop">成长记/旅程详情</span>
+    <span class="arr">｜</span><span class="scr">该补了</span><span class="arr">→</span><span class="scr pop">补货 sheet</span>
+    <span class="arr">｜</span><span class="scr">打卡</span><span class="arr">→</span><span class="scr pop">打卡成功弹层</span>
+    <span class="arr">｜</span><span class="scr">录入</span><span class="arr">→</span><span class="scr pop">录/改方案弹层</span>
+  </div>
+  <div class="flegend">实线箭头=tab 切换 ⇄ ；弹层(橙)=从某屏点出来的浮层，不是独立 tab。最终跳转关系按你选的组件，我在 final 里画死。</div>
+</div>
+
+<div id="render"></div>
+
+<!-- 痛点 checklist 容器 -->
+<div class="pains" id="painsBox"></div>
+
+</div>
+
+<!-- 决策标记：tab 数 -->
+<div class="summary">
+  <div class="row">
+    <div class="cnt">已选 <b id="cnt">0</b> 项</div>
+    <div class="picks" id="picks"><span style="background:none;color:#b9b3a6">点亮的组件会列在这里…</span></div>
+    <button class="btn ghost" onclick="resetAll()">清空</button>
+    <button class="btn" onclick="copyPick()">📋 复制我的选择</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== 数据：每屏 → 槽位 → 候选组件 ===== */
+const SCREENS = [
+ {name:"全局 · Tab 结构", badge:"先定这个", sub:"底栏几个 tab，影响后面所有页归属。",
+  slots:[
+   {label:"底部 tab 数", type:"one", opts:[
+     {id:"TB-3", src:"建议", nm:"3 tab：今日 / 周期(本周期⇄全历程) / 我的", ds:"把攻关并进周期做顶部切换，底栏更干净（你之前倾向）"},
+     {id:"TB-4", src:"v2", nm:"4 tab：今日 / 周期 / 攻关 / 我的", ds:"攻关独立成栏，叙事感强但底栏拥挤"},
+   ]},
+  ]},
+
+ {name:"① 今日页", badge:"核心 hero 屏", sub:"产品命门：乱药→清晰时间轴+掌控感。",
+  slots:[
+   {label:"顶部区（可多选叠加）", type:"many", opts:[
+     {id:"T1", src:"v4", nm:"状态卡·克制版（可点进成长记）", ds:"移植后第N天·距开奖，点进详情；不预设宝宝"},
+     {id:"T2", src:"v2", nm:"倒计时 hero", ds:'"两周等待已过一半"+进度条，直击最痛节点'},
+     {id:"T3", src:"v2", nm:"安心文案行", ds:'"今天的药交给我盯着，你安心"'},
+   ]},
+   {label:"进度区", type:"one", opts:[
+     {id:"P1", src:"v4", nm:"进度条 + 全完成横幅", ds:'点完全部→"今天都打卡了·安心睡吧"'},
+     {id:"P2", src:"v2", nm:"进度环（晨午晚分布）", ds:"5/8 完成，环形 + 时段分布"},
+   ]},
+   {label:"药卡样式", type:"one", opts:[
+     {id:"M1", src:"v3", nm:"库存版药卡", ds:'作用标签+类别色点+"还够X天"库存条+打卡圈'},
+     {id:"M2", src:"v2", nm:"情感版时段药卡", ds:"途径分色+打卡光晕粒子动效"},
+     {id:"M3", src:"v1", nm:"朴素时段药卡", ds:"途径分色+静态勾选，最简"},
+   ]},
+   {label:"打卡反馈（可多选·可分层）", type:"many", opts:[
+     {id:"C1", src:"v2", nm:"光晕+粒子+音效叮+震动", ds:"微仪式感（高危药/重要药用）"},
+     {id:"C2", src:"v4", nm:"消散+留痕", ds:'变灰下沉+"库存-1"可查证（爽感给眼睛·安全给记录）'},
+   ]},
+   {label:"库存联动（要不要）", type:"many", opts:[
+     {id:"S1", src:"v3", nm:"打卡→库存-1→还够X天", ds:"库存显示为时间不是片数"},
+     {id:"S2", src:"v3", nm:"余量≤3天→该补了→补货", ds:"接补货 sheet + 伴侣钩子"},
+   ]},
+   {label:"附加组件（要不要）", type:"many", opts:[
+     {id:"D1", src:"v1", nm:"停药节点卡", ds:'"还有3天停药（查HCG后停），到期提醒"'},
+     {id:"E1", src:"v1", nm:"防重复服提示", ds:'"打卡防的是重复吃，不只是漏吃"'},
+     {id:"E2", src:"v2", nm:'"给宝宝说一句"入口', ds:"跳时光信箱"},
+     {id:"E3", src:"v4", nm:"v2 teaser：自我照顾3条+生成晒图", ds:"aha#1/#2 入口，标 v2"},
+   ]},
+  ]},
+
+ {name:"成长记 / 旅程详情", badge:"今日顶部卡点进来", sub:"陪伴 aha。红线：分两段，别在等待期预设宝宝。",
+  slots:[
+   {label:"等待期模式（验孕前）", type:"one", opts:[
+     {id:"G1", src:"v4", nm:"移植旅程·克制版", ds:"进度环🌱+移植后第N天+这阶段在发生什么+节点轴+悄悄话"},
+     {id:"G1b", src:"建议", nm:"克制版 + 去掉进度环", ds:"更极简，只留天数+悄悄话"},
+   ]},
+   {label:"验孕成功后模式（切换）", type:"one", opts:[
+     {id:"G2", src:"竞品", nm:"宝宝成长记·暖版", ds:"孕周+胎宝水果大小+身长体重+悄悄话（备孕清单同款）"},
+     {id:"G2b", src:"建议", nm:"暖版但更克制", ds:"留孕周+本周变化+悄悄话，不强调攀比数字"},
+   ]},
+   {label:"叙事外壳（要不要）", type:"many", opts:[
+     {id:"G3", src:"v2", nm:'"攻关/好孕之路"关卡框架', ds:"把治疗包装成一起闯关"},
+     {id:"G4", src:"v2", nm:"里程碑印章", ds:"移植🌱/验孕🔬/毕业🎓 灰显未解锁"},
+   ]},
+  ]},
+
+ {name:"② 周期 tab", badge:"本周期 + 方案管理", sub:"这一仗：本周期节点 + 改方案。",
+  slots:[
+   {label:"本周期视图", type:"one", opts:[
+     {id:"CY1", src:"v2", nm:"本周期节点列表", ds:"移植日✓/黄体第7/14天/停药/验孕，连续视图"},
+     {id:"CY2", src:"v1", nm:"三节点时间轴", ds:"降促→移植黄体→验孕 连成线"},
+   ]},
+   {label:"方案管理（命门）", type:"many", opts:[
+     {id:"CY3", src:"命门", nm:'"医生改方案了？一键更新"', ds:"改药→刷新时间轴+旧版存档（F3 命门）"},
+     {id:"CY4", src:"v2", nm:"当前用药方案一览", ds:"各药频次一页看清"},
+   ]},
+   {label:"视图切换（要不要）", type:"many", opts:[
+     {id:"CY5", src:"建议", nm:"本周期 ⇄ 全历程 顶部切换", ds:"3-tab 方案下，把攻关收进这里"},
+   ]},
+  ]},
+
+ {name:"③ 攻关 tab", badge:"多周期 / 情绪叙事", sub:"整场战争。若选 3-tab，这些组件并进周期的「全历程」。",
+  slots:[
+   {label:"情绪/成就组件（可多选）", type:"many", opts:[
+     {id:"AT1", src:"v2", nm:"当前关卡卡", ds:'"好孕之路·攻关中 第N天"+进度'},
+     {id:"AT2", src:"v2", nm:'"为TA攒的"累积卡', ds:"坚持天数/打针支数 可视化辛苦"},
+     {id:"AT3", src:"v2", nm:"里程碑印章", ds:"移植/验孕/毕业 印章"},
+     {id:"AT7", src:"v2", nm:"时光信箱入口", ds:"给宝宝的话"},
+   ]},
+   {label:"病程档案（可多选）", type:"many", opts:[
+     {id:"AT4", src:"v1", nm:"多周期病程档案", ds:"3次促排 取卵→囊胚→过筛 一览"},
+     {id:"AT5", src:"v1", nm:"换药留痕版本", ds:"每次换药存版本 v1→v2→v3"},
+     {id:"AT6", src:"v1", nm:"合规免责条", ds:'"只陈列数据，不预测成功率/不对比正常值"'},
+   ]},
+  ]},
+
+ {name:"④ 我的 tab", badge:"设置 / 资产", sub:"学竞品：家庭组放这里。",
+  slots:[
+   {label:"入口项（可多选）", type:"many", opts:[
+     {id:"MY1", src:"v2", nm:"中文IVF药品库（储存提示）", ds:"常温/不可冷藏/需冷藏/看颜色"},
+     {id:"MY2", src:"v1", nm:"提醒设置", ds:"短信/夺命连环"},
+     {id:"MY3", src:"v2", nm:"分享给老公", ds:"看孕周/进展"},
+     {id:"MY5", src:"v2", nm:"复诊小结导出", ds:"给医生看"},
+     {id:"MY6", src:"v2", nm:"备份/换机导出", ds:"本地存储"},
+     {id:"MY8", src:"竞品", nm:"家庭组（建组+邀请）", ds:"中性化，含同性伴侣"},
+     {id:"MY7", src:"v2", nm:"隐私说明脚注", ds:'"数据存本地·隐私即卖点·无广告"'},
+   ]},
+  ]},
+
+ {name:"弹层 · onboarding 录方案", badge:"获客黄金点", sub:"诊室最短价值路径。",
+  slots:[
+   {label:"录入路径（可多选）", type:"many", opts:[
+     {id:"ON1", src:"骨架", nm:"诊室扫码→5分钟录→看提醒", ds:"最短价值路径"},
+     {id:"ON5", src:"竞品", nm:"阶段模板一键导入", ds:'"移植后标准黄体支持"导入再改+强制核对医嘱'},
+     {id:"ON3", src:"主文档", nm:"从药库选药+填医嘱", ds:"剂量留空照医嘱"},
+     {id:"ON4", src:"竞品", nm:"移植日→自动算第N天", ds:"确定性计算即时反馈"},
+     {id:"ON2", src:"竞品", nm:"4步进度条引导", ds:"一步一问降压迫（角色中性化）"},
+   ]},
+  ]},
+
+ {name:"弹层 · 录/改药品", badge:"准确性铁律", sub:"录入交互。",
+  slots:[
+   {label:"录入核心", type:"one", opts:[
+     {id:"AD1", src:"v3", nm:"剂型选(吃/打/塞)+库存录入", ds:"单位自动+作用标签+用法留空+库存(盒×每盒)+提醒默认3天"},
+   ]},
+   {label:"准确性加强（可多选）", type:"many", opts:[
+     {id:"AD3", src:"v1", nm:"剂量歧义二选一确认器", ds:'"各50mg vs 共50mg"防吃错'},
+     {id:"AD4", src:"v1", nm:"停药条件字段", ds:'"查HCG后停(3/19)"'},
+     {id:"AD6", src:"v4", nm:"果纳芬笔：计算+用户确认", ds:"总量÷医嘱≈够X天，用户点确认"},
+     {id:"AD5", src:"v1", nm:'"生成发给医生现场确认"', ds:"录入闭环延到诊室"},
+     {id:"AD2", src:"v1", nm:"多通道录入(拍/语音/粘贴)", ds:"主文档划 v2，UI 留作蓝本"},
+   ]},
+  ]},
+
+ {name:"弹层 · 补货 / 复诊 / 提醒 / 情感", badge:"功能浮层", sub:"从各屏点出来的浮层。",
+  slots:[
+   {label:"补货（要不要）", type:"many", opts:[
+     {id:"RF1", src:"v3", nm:"余量告急→购物清单+分享老公", ds:"只露补什么/去哪开，伴侣钩子"},
+   ]},
+   {label:"复诊 overview（可多选）", type:"many", opts:[
+     {id:"OV1", src:"v1", nm:"当前在用一览表", ds:"剂量/途径/频次/已用天数"},
+     {id:"OV2", src:"v1", nm:"三方医嘱合并", ds:"生殖+免疫+内分泌一页，标以医生为准"},
+   ]},
+   {label:"提醒设置（可多选）", type:"many", opts:[
+     {id:"RM1", src:"v1", nm:"App内+手机日历同步", ds:"基础刚需"},
+     {id:"RM2", src:"v1", nm:"短信提醒", ds:"收不到推送也能到"},
+     {id:"RM3", src:"v1", nm:"夜针夺命连环", ds:"仅高危药，未打卡反复响"},
+   ]},
+   {label:"情感/仪式（可多选）", type:"many", opts:[
+     {id:"EM1", src:"v2", nm:"打卡成功大勾印章", ds:'"今天稳稳的💪"'},
+     {id:"EM3", src:"v2", nm:"伴侣分享卡", ds:"进展不裸露医疗细节"},
+     {id:"EM2", src:"v2", nm:"时光信箱打字机信", ds:"AI编织给宝宝的信（v2）"},
+     {id:"EM4", src:"v4", nm:"生成本周陪伴卡(晒图)", ds:"nano banana 出图（v2/收费）"},
+   ]},
+  ]},
+];
+
+/* ===== 痛点清单（默认全留，勾掉=砍） ===== */
+const PAINS = [
+ {g:"决策选院 / 术前", items:[
+   {t:"选院选医生没头绪（2000+机构参差）", m:""},
+   {t:"初诊带什么证件/挂什么科懵", m:""},
+   {t:"检查窗口严(激素六项月经2-4天)易错过", m:""},
+   {t:"AMH/FSH/激素报告看不懂", m:""},
+ ]},
+ {g:"降调 / 促排", items:[
+   {t:"降调副作用像更年期、没人陪", m:""},
+   {t:"补剂(CoQ10/DHEA)剂量品牌各说各话", m:""},
+   {t:"★ 每天打针、剂量天天调记不住", m:"should", s:1},
+   {t:"夜针卡36分钟、临时通知协调难", m:""},
+   {t:"卵泡数据看不懂、OHSS风险不自知", m:""},
+ ]},
+ {g:"取卵 / 养胚 / PGT", items:[
+   {t:"取卵数焦虑直接决定情绪", m:""},
+   {t:"腹水/OHSS该不该去急诊边界不清", m:""},
+   {t:"★ 养胚逐日淘汰、每天等电话像等判决", m:"could", s:1},
+   {t:"胚胎Gardner评分(4AA/4BA)看不懂", m:""},
+   {t:"★ 等PGT基因报告1-4周，最空白的煎熬", m:"v2", s:1},
+   {t:"★ 全军覆没：筛完无可用胚胎", m:"v2", s:1},
+ ]},
+ {g:"移植 / 黄体支持（MVP 核心）", items:[
+   {t:"★ 黄体支持多药并行(针+塞+口服)最复杂", m:"must", s:1},
+   {t:"移植前额外检查(宫腔镜/封闭抗体)开不开", m:""},
+   {t:"黄体酮副作用与着床症状分不清", m:""},
+   {t:"★ 药太多、又打又吃、时间会变（记不清）", m:"must", s:1},
+   {t:"忘了家里还有没有药/会不会断药", m:"could"},
+   {t:"停药节点(查HCG停/N天停)易错", m:"must"},
+ ]},
+ {g:"两周等待 / 验孕早孕", items:[
+   {t:"★ 移植后到验孕两周，情绪最痛节点", m:"could", s:1},
+   {t:"几天能测、一条杠是没怀还是太早", m:""},
+   {t:"★ HCG翻倍/孕酮解读，随数值波动焦虑", m:""},
+   {t:"保胎药什么时候停、私自调药", m:""},
+ ]},
+ {g:"毕业 / 失败循环", items:[
+   {t:"★ IVF孕周被产科按末次月经算错", m:""},
+   {t:"转产科档案缺失、产科不懂IVF背景", m:""},
+   {t:"★ 失败后崩溃，家人'再试一次'加重负担", m:""},
+   {t:"★ 多周期数据散落无法纵向对比", m:"could", s:1},
+   {t:"'要不要再来一次'最难决策无人帮", m:""},
+ ]},
+ {g:"横切层", items:[
+   {t:"费用/生育津贴搞不清（已否决独立MVP）", m:""},
+   {t:"情绪焦虑抑郁全程无人专业承接", m:""},
+   {t:"伴侣/婆婆压力全在女方", m:"could"},
+   {t:"职场就医频繁瞒公司编借口", m:""},
+ ]},
+];
+
+/* ===== 渲染 ===== */
+const sel = {}; // id -> true
+function render(){
+  let h="";
+  SCREENS.forEach(scr=>{
+    h+=`<div class="sec"><h2>${scr.name} <span class="badge">${scr.badge}</span></h2><div class="sub">${scr.sub}</div>`;
+    scr.slots.forEach(slot=>{
+      const tag = slot.type==="one"?'<span class="pick one">二选一</span>':'<span class="pick many">可多选</span>';
+      h+=`<div class="slot"><div class="sl-h">${slot.label} ${tag}</div><div class="opts">`;
+      slot.opts.forEach(o=>{
+        h+=`<div class="opt" data-id="${o.id}" data-type="${slot.type}" data-slot="${slot.label}" onclick="pick(this)">
+          <span class="id">${o.id}</span><span class="src ${o.src}">${o.src}</span>
+          <div class="nm">${o.nm}</div><div class="ds">${o.ds}</div><div class="tick">✓</div></div>`;
+      });
+      h+=`</div></div>`;
+    });
+    h+=`</div>`;
+  });
+  document.getElementById('render').innerHTML=h;
+
+  // pains
+  let p=`<h2>🎯 痛点清单（默认全留 · 勾掉=砍）</h2><div class="sub">★=Cici 本人亲历(最适合 dogfood) · 标签=MVP 优先级。一开始情愿多，再做减法。</div>`;
+  PAINS.forEach(grp=>{
+    p+=`<div class="pgrp"><div class="gh">${grp.g}</div>`;
+    grp.items.forEach((it,i)=>{
+      const mtag = it.m?`<span class="mtag m-${it.m}">${({must:'Must',should:'Should',could:'Could',v2:'v2'})[it.m]}</span>`:'';
+      const txt = it.s?it.t.replace('★','<span class="star">★</span>'):it.t;
+      p+=`<div class="pitem on" onclick="togP(this)"><div class="pb">✓</div><div>${txt}${mtag}</div></div>`;
+    });
+    p+=`</div>`;
+  });
+  document.getElementById('painsBox').innerHTML=p;
+  updateSummary();
+}
+function pick(el){
+  const id=el.dataset.id, type=el.dataset.type;
+  if(type==="one"){
+    // 取消同槽其他
+    document.querySelectorAll(`.opt[data-slot="${CSS.escape(el.dataset.slot)}"][data-type="one"]`).forEach(o=>{
+      if(o!==el){o.classList.remove('sel');delete sel[o.dataset.id];}
+    });
+    if(el.classList.contains('sel')){el.classList.remove('sel');delete sel[id];}
+    else{el.classList.add('sel');sel[id]=true;}
+  }else{
+    el.classList.toggle('sel');
+    if(el.classList.contains('sel'))sel[id]=true;else delete sel[id];
+  }
+  updateSummary();
+}
+function togP(el){el.classList.toggle('on');el.classList.toggle('off');}
+function updateSummary(){
+  const ids=Object.keys(sel);
+  document.getElementById('cnt').textContent=ids.length;
+  document.getElementById('picks').innerHTML = ids.length?ids.map(i=>`<span>${i}</span>`).join(''):'<span style="background:none;color:#b9b3a6">点亮的组件会列在这里…</span>';
+}
+function resetAll(){
+  Object.keys(sel).forEach(k=>delete sel[k]);
+  document.querySelectorAll('.opt.sel').forEach(o=>o.classList.remove('sel'));
+  updateSummary();toast('已清空');
+}
+function copyPick(){
+  const ids=Object.keys(sel);
+  // 按屏归组输出
+  let lines=["【我的 final 选择】"];
+  SCREENS.forEach(scr=>{
+    const got=[];
+    scr.slots.forEach(slot=>slot.opts.forEach(o=>{if(sel[o.id])got.push(o.id+" "+o.nm);}));
+    if(got.length)lines.push("\n# "+scr.name+"\n- "+got.join("\n- "));
+  });
+  // 砍掉的痛点
+  const cut=[...document.querySelectorAll('.pitem.off')].map(e=>e.innerText.trim());
+  lines.push("\n# 痛点：砍掉 "+cut.length+" 条"+(cut.length?"\n- "+cut.join("\n- "):"（全留）"));
+  const txt=lines.join("\n");
+  navigator.clipboard.writeText(txt).then(()=>toast('已复制！粘贴发给 Claude 即可'),()=>{
+    // 兜底
+    const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');toast('已复制！');}catch(e){toast('复制失败，手动选文字');}
+    ta.remove();
+  });
+}
+let tt;
+function toast(m){const el=document.getElementById('toast');el.textContent=m;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),1800);}
+render();
+</script>
+</body>
+</html>
