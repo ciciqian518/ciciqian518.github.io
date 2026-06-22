@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>备孕助手 · 用药+库存 mockup v3.0</title>
+<style>
+  :root{
+    --teal:#5B9A92; --teal-d:#3f7d75; --bg:#FBFAF7; --teal-bg:#EAF3F1;
+    --ink:#2f3a38; --soft:#7c8784; --line:#ece8e0; --card:#fff;
+    --green:#5aa978; --green-bg:#e9f5ee; --amber:#c98a2e; --amber-bg:#fbf2e2;
+    --red:#c0584f; --red-bg:#f8ece9;
+    /* 类别线色 */
+    --c-flow:#5B9A92; --c-immune:#c98a2e; --c-nutri:#5aa978;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#efeae1;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.55;padding:30px 16px 60px}
+  .page-h{text-align:center;max-width:900px;margin:0 auto 8px}
+  .page-h h1{font-size:21px;color:var(--teal-d)}
+  .page-h p{font-size:13px;color:var(--soft);margin-top:4px}
+  .note{max-width:760px;margin:14px auto 28px;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:12px 18px;font-size:12.5px;color:var(--soft)}
+  .note b{color:var(--teal-d)}
+  .stage{display:flex;gap:30px;justify-content:center;flex-wrap:wrap;align-items:flex-start}
+  .col{width:332px}
+  .cap{font-size:12.5px;color:#5f6a67;margin-top:12px;background:#fff;border:1px solid var(--line);
+    border-radius:10px;padding:10px 14px}
+  .cap b{color:var(--teal-d)}
+  /* phone */
+  .phone{width:332px;background:var(--bg);border-radius:34px;padding:12px;
+    box-shadow:0 10px 40px rgba(0,0,0,.14);border:1px solid #ded8cd}
+  .screen{background:var(--bg);border-radius:24px;overflow:hidden;min-height:660px;position:relative}
+  .sb{display:flex;justify-content:space-between;align-items:center;padding:10px 18px 4px;font-size:12px;color:var(--soft)}
+  .pad{padding:6px 18px 80px}
+  /* header today */
+  .today-h{padding:8px 2px 14px}
+  .today-h .d{font-size:26px;font-weight:700;color:var(--ink)}
+  .today-h .d small{font-size:14px;color:var(--teal-d);font-weight:600}
+  .today-h .sub{font-size:13px;color:var(--teal-d);margin-top:2px}
+  .prog{display:flex;align-items:center;gap:10px;background:var(--teal-bg);border-radius:12px;
+    padding:9px 14px;margin:4px 0 14px;font-size:13px;color:var(--teal-d)}
+  .prog .bar{flex:1;height:7px;background:#d4e7e2;border-radius:6px;overflow:hidden}
+  .prog .bar i{display:block;height:100%;width:60%;background:var(--teal);border-radius:6px}
+  .seg{font-size:12px;color:var(--soft);margin:14px 2px 8px;font-weight:600;letter-spacing:.5px}
+  /* med card */
+  .med{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px 14px;margin-bottom:11px;
+    display:flex;gap:12px;align-items:flex-start;position:relative}
+  .ic{width:42px;height:42px;border-radius:12px;background:var(--teal-bg);display:flex;align-items:center;
+    justify-content:center;font-size:21px;flex-shrink:0}
+  .med .body{flex:1;min-width:0}
+  .med .nm{font-size:15.5px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .cdot{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .lab{font-size:10.5px;padding:1px 7px;border-radius:20px;background:var(--teal-bg);color:var(--teal-d);font-weight:600}
+  .use{font-size:12px;color:var(--soft);margin-top:3px}
+  /* stock bar */
+  .stock{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px}
+  .stock .sbar{flex:1;height:6px;background:#eee7da;border-radius:6px;overflow:hidden}
+  .stock .sbar i{display:block;height:100%;border-radius:6px}
+  .stock .txt{font-weight:600;white-space:nowrap}
+  .ok .sbar i{width:62%;background:var(--green)} .ok .txt{color:var(--green)}
+  .low .sbar i{width:20%;background:var(--red)} .low .txt{color:var(--red)}
+  /* check */
+  .chk{width:30px;height:30px;border-radius:50%;border:2px solid #d8d2c6;flex-shrink:0;margin-top:3px}
+  .chk.done{background:var(--green);border-color:var(--green);position:relative}
+  .chk.done:after{content:"✓";color:#fff;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16px}
+  .med.done{opacity:.55}
+  .med.done .nm{text-decoration:line-through;text-decoration-color:#bcb}
+  .done-tip{font-size:11px;color:var(--green);margin-top:6px}
+  /* refill pill */
+  .refill{display:inline-flex;align-items:center;gap:4px;background:var(--red-bg);color:var(--red);
+    font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:20px;margin-top:8px;border:1px solid #eccfca}
+  /* tabbar */
+  .tab{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;
+    padding:9px 0 14px;background:rgba(251,250,247,.96);border-top:1px solid var(--line);font-size:11px;color:#a7afac}
+  .tab .on{color:var(--teal-d);font-weight:600}
+  .tab i{display:block;font-size:18px;margin-bottom:2px}
+  /* form */
+  .h2{font-size:18px;font-weight:700;padding:6px 2px 12px}
+  .field{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:11px}
+  .field .k{font-size:11.5px;color:var(--soft);margin-bottom:5px}
+  .field .v{font-size:15px;color:var(--ink);font-weight:600}
+  .chips{display:flex;gap:8px}
+  .chip{flex:1;text-align:center;border:1.5px solid var(--line);border-radius:11px;padding:9px 0;font-size:13px;color:var(--soft)}
+  .chip.sel{border-color:var(--teal);background:var(--teal-bg);color:var(--teal-d);font-weight:700}
+  .chip .em{font-size:18px;display:block;margin-bottom:2px}
+  .stk-row{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap}
+  .step{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+  .step b{width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--teal-d);font-size:16px}
+  .step span{width:40px;text-align:center;font-weight:700}
+  .eq{color:var(--teal-d);font-weight:700}
+  .hint{font-size:11px;color:var(--soft);margin-top:7px}
+  .hint b{color:var(--amber)}
+  .grey{color:#b7b3a8;font-weight:400}
+  /* calc box */
+  .calc{background:var(--amber-bg);border:1px solid #ecd9b3;border-radius:13px;padding:12px 14px;margin-bottom:11px}
+  .calc .t{font-size:12.5px;color:var(--amber);font-weight:700;margin-bottom:7px}
+  .calc .ln{font-size:13px;display:flex;justify-content:space-between;margin:3px 0}
+  .calc .res{margin-top:8px;padding-top:8px;border-top:1px dashed #e3cda0;font-size:13.5px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center}
+  .miniBtn{background:var(--teal);color:#fff;font-size:12px;font-weight:600;padding:5px 14px;border-radius:18px}
+  .save{position:absolute;left:18px;right:18px;bottom:18px;background:var(--teal);color:#fff;text-align:center;
+    padding:14px;border-radius:16px;font-size:15px;font-weight:700;box-shadow:0 6px 18px rgba(91,154,146,.4)}
+  /* screen3 alert */
+  .alert{background:var(--red-bg);border:1px solid #eccfca;border-radius:16px;padding:16px;margin:6px 0 16px}
+  .alert .t{font-size:15px;font-weight:700;color:var(--red);display:flex;align-items:center;gap:8px}
+  .alert .s{font-size:13px;color:#9a5249;margin-top:4px}
+  .acts{display:flex;gap:10px;margin-top:14px}
+  .btn{flex:1;text-align:center;padding:12px 6px;border-radius:13px;font-size:13.5px;font-weight:700}
+  .btn.pri{background:var(--teal);color:#fff}
+  .btn.sec{background:#fff;border:1.5px solid var(--teal);color:var(--teal-d)}
+  .listcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:6px}
+  .listcard .lh{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px;display:flex;justify-content:space-between}
+  .li{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .li:last-child{border-bottom:none}
+  .li .box{width:20px;height:20px;border:2px solid #d4cebf;border-radius:6px;flex-shrink:0}
+  .li .q{margin-left:auto;color:var(--soft);font-size:12.5px}
+  .shared{display:flex;align-items:center;gap:8px;background:var(--teal-bg);border-radius:12px;padding:10px 14px;
+    margin-top:14px;font-size:12.5px;color:var(--teal-d)}
+  .ava{width:26px;height:26px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+  .legend{max-width:760px;margin:30px auto 0;font-size:12px;color:var(--soft);text-align:center;line-height:2}
+  .legend .cdot{margin:0 3px 0 10px}
+</style>
+</head>
+<body>
+
+<div class="page-h">
+  <h1>备孕助手 · 用药 + 库存 mockup v3.0</h1>
+  <p>聚焦库存管理 ｜ 移植后黄体支持场景 ｜ 图标为占位符（待替换手绘图标）</p>
+</div>
+<div class="note">
+  <b>这版要给你看的核心：</b>① 库存不显示"剩几片"而显示"<b>还够几天</b>"（断药焦虑的语言是时间）② 打卡一次 → 进度+1 且库存自动−1（不让用户手动改）③ 余量≤3天 → 一键「加入购物清单 + 分享伴侣去开药」④ 果纳芬笔 = 简单计算 + 用户确认（模糊+确认 > 精确错）⑤ 剂型只分 吃/打/塞，类别线色点标"谁开的"。
+</div>
+
+<div class="stage">
+
+  <!-- ============ SCREEN 1 · 今日（库存可视化） ============ -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="today-h">
+        <div class="d">移植后 第 <small>7</small> 天</div>
+        <div class="sub">距开奖还有 5 天 · 稳稳的，交给我盯着</div>
+      </div>
+      <div class="prog"><span>今天 3/5</span><div class="bar"><i></i></div><span>还剩 2 项</span></div>
+
+      <div class="seg">早晨 · 8:00</div>
+
+      <!-- 已完成（消散+留痕：弱化但仍可查证） -->
+      <div class="med done">
+        <div class="ic">💊</div>
+        <div class="body">
+          <div class="nm"><span class="cdot" style="background:var(--c-flow)"></span>达芙通 <span class="lab">补孕酮</span></div>
+          <div class="done-tip">✓ 已打卡 8:05 · 库存 −1，还够 18 天</div>
+        </div>
+        <div class="chk done"></div>
+      </div>
+
+      <!-- 待办 · 库存充足 -->
+      <div class="med">
+        <div class="ic">💉</div>
+        <div class="body">
+          <div class="nm"><span class="cdot" style="background:var(--c-immune)"></span>克赛 <span class="lab">抗凝·保胎</span></div>
+          <div class="use">皮下注射 · 每天 1 针（免疫科开）</div>
+          <div class="stock ok"><div class="sbar"><i></i></div><span class="txt">还够 12 天</span></div>
+        </div>
+        <div class="chk"></div>
+      </div>
+
+      <div class="seg">晚上 · 21:00</div>
+
+      <!-- 待办 · 余量告急 -->
+      <div class="med">
+        <div class="ic">🔻</div>
+        <div class="body">
+          <div class="nm"><span class="cdot" style="background:var(--c-flow)"></span>雪诺同 <span class="lab">黄体支持</span></div>
+          <div class="use">阴道塞药 · 每天 1 支（生殖科开）</div>
+          <div class="stock low"><div class="sbar"><i></i></div><span class="txt">仅够 3 天</span></div>
+          <span class="refill">⚠ 该补了 · 去开药要时间 →</span>
+        </div>
+        <div class="chk"></div>
+      </div>
+
+      <!-- 营养 -->
+      <div class="med">
+        <div class="ic">💊</div>
+        <div class="body">
+          <div class="nm"><span class="cdot" style="background:var(--c-nutri)"></span>爱乐维 <span class="lab">营养·叶酸</span></div>
+          <div class="use">口服 · 每天 1 片</div>
+          <div class="stock ok"><div class="sbar"><i></i></div><span class="txt">还够 23 天</span></div>
+        </div>
+        <div class="chk"></div>
+      </div>
+    </div>
+    <div class="tab">
+      <div class="on"><i>📋</i>今日</div>
+      <div><i>🔄</i>周期</div>
+      <div><i>🙂</i>我的</div>
+    </div>
+  </div></div>
+  <div class="cap"><b>今日页：</b>每个药卡右下角是"<b>还够 N 天</b>"而非剩几片——绿色安心、红色告急。已打卡的（达芙通）变灰下沉但留一行"库存−1、还够18天"可查证（<b>爽感给眼睛、安全感给记录</b>）。雪诺同仅够3天 → 直接长出"该补了"。色点 = 类别线（teal流程/橙免疫/绿营养），标"谁开的"。</div>
+  </div>
+
+  <!-- ============ SCREEN 2 · 录入药品（库存录入） ============ -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="h2">＜ 记一个药</div>
+
+      <div class="field">
+        <div class="k">药名</div>
+        <div class="v">雪诺同</div>
+      </div>
+
+      <div class="field">
+        <div class="k">怎么用药（选了决定单位）</div>
+        <div class="chips">
+          <div class="chip"><span class="em">💊</span>吃</div>
+          <div class="chip"><span class="em">💉</span>打</div>
+          <div class="chip sel"><span class="em">🔻</span>塞</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="k">作用标签</div>
+        <div class="v">黄体支持 <span class="grey">· 生殖科</span></div>
+      </div>
+
+      <div class="field">
+        <div class="k">用法（照医嘱填，不替你预设）</div>
+        <div class="v">每天 1 支 · 晚 21:00</div>
+      </div>
+
+      <!-- 库存录入 -->
+      <div class="field" style="border-color:#cfe4df;background:#f6fbfa">
+        <div class="k">现在家里有多少（单位随"塞"自动给：支）</div>
+        <div class="stk-row">
+          <span class="step"><b>−</b><span>2</span><b>+</b></span> 盒
+          <span class="grey">×</span> 每盒 <span class="step"><b>−</b><span>15</span><b>+</b></span> 支
+          <span class="eq">= 共 30 支</span>
+        </div>
+        <div class="hint">用完提醒：默认 <b>剩 3 天的量</b> 就提醒（去医院开药要时间）· 可改 ✏️</div>
+      </div>
+
+      <!-- 果纳芬特殊：计算+确认 -->
+      <div class="calc">
+        <div class="t">⚙️ 像果纳芬这种"笔"，帮你估能用几天</div>
+        <div class="ln"><span>拿到</span><span>900 IU/支 × 1 支</span></div>
+        <div class="ln"><span>医嘱</span><span>每天 225 IU</span></div>
+        <div class="res"><span>≈ 够用 4 天 · 对吗？</span><span class="miniBtn">确认</span></div>
+        <div class="hint" style="margin-top:8px">一支用一次还是分几次因人而异，<b>你点确认一下更准</b>。</div>
+      </div>
+    </div>
+    <div class="save">加入清单</div>
+  </div></div>
+  <div class="cap"><b>录入页：</b>选"塞"→ 单位自动变"支"，不会问片数。库存只录一次「<b>几盒 × 每盒几 = 总数</b>」，之后打卡自动扣减。提醒阈值给好默认值（剩3天），用户一般不动。<b>果纳芬</b>用"总量÷医嘱"算出"约够4天"，但因"一支用几次因人而异"，让用户点「确认」——这就是<b>模糊+确认 > 精确但可能错</b>。</div>
+  </div>
+
+  <!-- ============ SCREEN 3 · 余量告急 → 购物清单 + 分享伴侣 ============ -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="h2">余量提醒</div>
+
+      <div class="alert">
+        <div class="t">⚠ 雪诺同 仅够 3 天了</div>
+        <div class="s">每天 1 支、现在剩 3 支。去医院开药 / 快递都要时间，建议现在就安排补货。</div>
+        <div class="acts">
+          <div class="btn pri">加入购物清单</div>
+          <div class="btn sec">分享给老公去开药</div>
+        </div>
+      </div>
+
+      <div class="listcard">
+        <div class="lh"><span>🛒 购物清单</span><span class="grey">3 项待补</span></div>
+        <div class="li"><span class="box"></span>雪诺同 <span class="q">×2 盒</span></div>
+        <div class="li"><span class="box"></span>达芙通 <span class="q">×1 盒</span></div>
+        <div class="li"><span class="box"></span>克赛 <span class="q">×1 盒</span></div>
+        <div class="shared">
+          <span class="ava">夫</span> 已分享给老公 · 他能看到要补什么、去哪个医院开
+        </div>
+      </div>
+
+      <div class="cap" style="margin-top:18px;background:var(--teal-bg);border-color:#cfe4df;color:var(--teal-d)">
+        💡 这一步把"老公为什么参与"落地了：<b>他是去开药/补货的人</b>。清单对他只露"补什么、去哪开"，不露敏感医疗细节。
+      </div>
+    </div>
+    <div class="tab">
+      <div><i>📋</i>今日</div>
+      <div><i>🔄</i>周期</div>
+      <div class="on"><i>🙂</i>我的</div>
+    </div>
+  </div></div>
+  <div class="cap"><b>余量告急流：</b>不只弹提醒，而是给两个出口——「加入购物清单」自己补，或「<b>分享给老公去开药</b>」。库存 × 伴侣参与 × 补药钩子在这里咬合。</div>
+  </div>
+
+</div>
+
+<div class="legend">
+  类别线：<span class="cdot" style="background:var(--c-flow)"></span>流程（生殖科）
+  <span class="cdot" style="background:var(--c-immune)"></span>免疫保胎（可能另一医生）
+  <span class="cdot" style="background:var(--c-nutri)"></span>营养补充 ｜ 三线提醒一视同仁 · 中医为 option 暂未显示<br>
+  剂型：💊吃 · 💉打 · 🔻塞（均为占位 emoji，待替换 form-oral / form-injection / form-vaginal 手绘图标）
+</div>
+
+</body>
+</html>
