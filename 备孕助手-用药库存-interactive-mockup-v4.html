@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>备孕助手 · 交互 mockup v4</title>
+<style>
+  :root{
+    --teal:#5B9A92; --teal-d:#3f7d75; --bg:#FBFAF7; --teal-bg:#EAF3F1;
+    --ink:#2f3a38; --soft:#7c8784; --line:#ece8e0; --card:#fff;
+    --green:#5aa978; --green-bg:#e9f5ee; --amber:#c98a2e; --amber-bg:#fbf2e2;
+    --red:#c0584f; --red-bg:#f8ece9;
+    --c-flow:#5B9A92; --c-immune:#c98a2e; --c-nutri:#5aa978;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:#efeae1;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.55;padding:26px 16px 60px;display:flex;flex-direction:column;align-items:center}
+  .page-h{text-align:center;margin-bottom:16px}
+  .page-h h1{font-size:20px;color:var(--teal-d)}
+  .page-h p{font-size:12.5px;color:var(--soft);margin-top:4px}
+  .ahas{max-width:560px;background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:12px 18px;margin-bottom:20px;font-size:12.5px;color:#5f6a67}
+  .ahas b{color:var(--teal-d)} .ahas .v2{color:var(--amber)}
+  .ahas div{margin:3px 0}
+  /* phone */
+  .phone{width:338px;background:var(--bg);border-radius:36px;padding:12px;
+    box-shadow:0 14px 50px rgba(0,0,0,.18);border:1px solid #ded8cd}
+  .screen{background:var(--bg);border-radius:26px;overflow:hidden;height:710px;position:relative}
+  .view{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .hidden{display:none}
+  .sb{display:flex;justify-content:space-between;align-items:center;padding:11px 20px 4px;font-size:12px;color:var(--soft)}
+  .pad{padding:6px 18px 96px}
+  /* status card (备孕清单 style top) */
+  .stcard{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#eef5f3,#f6efe6);
+    border:1px solid #dde9e5;border-radius:18px;padding:14px 16px;margin:8px 0 6px;cursor:pointer;position:relative;transition:transform .12s}
+  .stcard:active{transform:scale(.98)}
+  .ring{width:54px;height:54px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    background:conic-gradient(var(--teal) 0 26%, #dce7e3 26% 100%);position:relative}
+  .ring::after{content:"";position:absolute;inset:5px;background:#f3efe7;border-radius:50%}
+  .ring span{position:relative;z-index:1;font-size:22px}
+  .stcard .info{flex:1;min-width:0}
+  .stcard .t{font-size:13px;color:var(--soft)}
+  .stcard .b{font-size:18px;font-weight:700;color:var(--ink)}
+  .stcard .b small{font-size:13px;color:var(--teal-d)}
+  .stcard .arr{color:#b9c4c0;font-size:20px}
+  /* progress / done banner */
+  .prog{display:flex;align-items:center;gap:10px;background:var(--teal-bg);border-radius:13px;
+    padding:10px 14px;margin:10px 0 14px;font-size:13px;color:var(--teal-d)}
+  .prog .bar{flex:1;height:7px;background:#d4e7e2;border-radius:6px;overflow:hidden}
+  .prog .bar i{display:block;height:100%;background:var(--teal);border-radius:6px;transition:width .4s}
+  .doneBanner{background:linear-gradient(135deg,#e9f5ee,#eef5f3);border:1px solid #cfe7d8;border-radius:13px;
+    padding:13px 16px;margin:10px 0 14px;font-size:14px;color:var(--green);font-weight:600;text-align:center;display:none}
+  .seg{font-size:12px;color:var(--soft);margin:12px 2px 8px;font-weight:600}
+  /* med card */
+  .med{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px 14px;margin-bottom:11px;
+    display:flex;gap:12px;align-items:flex-start;transition:opacity .3s,transform .3s}
+  .ic{width:42px;height:42px;border-radius:12px;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+  .med .body{flex:1;min-width:0}
+  .med .nm{font-size:15.5px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .cdot{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .lab{font-size:10.5px;padding:1px 7px;border-radius:20px;background:var(--teal-bg);color:var(--teal-d);font-weight:600}
+  .use{font-size:12px;color:var(--soft);margin-top:3px}
+  .stock{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px}
+  .stock .sbar{flex:1;height:6px;background:#eee7da;border-radius:6px;overflow:hidden}
+  .stock .sbar i{display:block;height:100%;border-radius:6px;transition:width .4s}
+  .stock .txt{font-weight:600;white-space:nowrap}
+  .ok .sbar i{background:var(--green)} .ok .txt{color:var(--green)}
+  .low .sbar i{background:var(--red)} .low .txt{color:var(--red)}
+  .chk{width:30px;height:30px;border-radius:50%;border:2px solid #d8d2c6;flex-shrink:0;margin-top:3px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;transition:.2s}
+  .chk.done{background:var(--green);border-color:var(--green)}
+  .med.done{opacity:.5}
+  .med.done .nm{text-decoration:line-through;text-decoration-color:#bcb}
+  .dtip{font-size:11px;color:var(--green);margin-top:6px;display:none}
+  .med.done .dtip{display:block}
+  .refill{display:inline-flex;align-items:center;gap:4px;background:var(--red-bg);color:var(--red);
+    font-size:11.5px;font-weight:600;padding:4px 11px;border-radius:20px;margin-top:8px;border:1px solid #eccfca;cursor:pointer}
+  /* v2 teaser */
+  .v2sec{background:#fff;border:1px dashed #d9d2c4;border-radius:16px;padding:13px 15px;margin:14px 0 4px}
+  .v2sec .h{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;color:var(--ink)}
+  .v2chip{font-size:10px;background:var(--amber-bg);color:var(--amber);padding:2px 8px;border-radius:20px;font-weight:700}
+  .softrow{display:flex;gap:8px;margin-top:10px}
+  .soft{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:9px 4px;text-align:center;font-size:12px;color:var(--soft);cursor:pointer}
+  .soft .em{font-size:18px;display:block} .soft.on{background:var(--green-bg);border-color:#bfe3cd;color:var(--green);font-weight:600}
+  .genbtn{margin-top:10px;background:linear-gradient(135deg,#f3e6cf,#ecd9b3);color:#8a5a16;text-align:center;
+    padding:10px;border-radius:11px;font-size:12.5px;font-weight:600;cursor:pointer}
+  /* tabbar */
+  .tab{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;
+    padding:9px 0 14px;background:rgba(251,250,247,.96);border-top:1px solid var(--line);font-size:11px;color:#a7afac}
+  .tab .on{color:var(--teal-d);font-weight:600}
+  .tab i{display:block;font-size:18px;margin-bottom:2px;font-style:normal}
+  /* detail page */
+  .dtop{display:flex;align-items:center;gap:12px;padding:12px 4px 6px;font-size:15px;color:var(--ink)}
+  .dtop .x{cursor:pointer;font-size:20px;color:var(--soft)}
+  .phasewrap{text-align:center;padding:10px 0 4px}
+  .phasetag{display:inline-block;font-size:12px;background:var(--teal-bg);color:var(--teal-d);padding:3px 12px;border-radius:20px;font-weight:600}
+  .bigring{width:150px;height:150px;border-radius:50%;margin:16px auto 6px;position:relative;
+    background:conic-gradient(var(--teal) 0 26%, #e4ddd0 26% 100%)}
+  .bigring::after{content:"";position:absolute;inset:11px;background:var(--bg);border-radius:50%}
+  .bigring .core{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1}
+  .bigring .core .e{font-size:40px}
+  .bigring .core .p{font-size:12px;color:var(--soft);margin-top:2px}
+  .dtitle{text-align:center;font-size:21px;font-weight:700;margin-top:4px}
+  .dtitle b{color:var(--teal-d)}
+  .dsub{text-align:center;font-size:13px;color:var(--soft);margin-top:2px}
+  .stats{display:flex;gap:9px;margin:16px 0}
+  .stat{flex:1;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center}
+  .stat .n{font-size:19px;font-weight:700;color:var(--ink)} .stat .n small{font-size:12px;color:var(--soft)}
+  .stat .l{font-size:11px;color:var(--soft);margin-top:2px}
+  .ibox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 15px;margin-bottom:12px}
+  .ibox .ih{font-size:13.5px;font-weight:700;margin-bottom:5px}
+  .ibox p{font-size:13px;color:#5d6764}
+  .timeline{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:14px 12px;margin-bottom:12px;position:relative}
+  .tl{flex:1;text-align:center;font-size:11px;color:var(--soft);position:relative;z-index:1}
+  .tl .d{width:14px;height:14px;border-radius:50%;background:#dcd6c8;margin:0 auto 5px}
+  .tl.cur .d{background:var(--teal);box-shadow:0 0 0 4px var(--teal-bg)} .tl.cur{color:var(--teal-d);font-weight:700}
+  .tl.done .d{background:var(--teal)}
+  .timeline::before{content:"";position:absolute;left:34px;right:34px;top:24px;height:2px;background:#e4ddd0}
+  .whisper{background:linear-gradient(135deg,#f7eef0,#f3eef6);border:1px solid #ecdfe4;border-radius:14px;padding:13px 15px;margin-bottom:12px}
+  .whisper .wh{font-size:13px;font-weight:700;color:#b06a86}
+  .whisper p{font-size:13px;color:#7d6a72;margin-top:3px}
+  .switchnote{font-size:11.5px;color:var(--amber);background:var(--amber-bg);border-radius:11px;padding:9px 13px;border:1px solid #ecd9b3}
+  /* sheet */
+  .mask{position:absolute;inset:0;background:rgba(40,40,38,.4);display:none;align-items:flex-end;z-index:20}
+  .mask.show{display:flex}
+  .sheet{background:var(--bg);width:100%;border-radius:22px 22px 0 0;padding:18px 18px 26px;transform:translateY(100%);transition:.28s}
+  .mask.show .sheet{transform:translateY(0)}
+  .sheet h3{font-size:16px;margin-bottom:4px}
+  .sheet .sd{font-size:12.5px;color:var(--soft);margin-bottom:14px}
+  .acts{display:flex;gap:10px;margin:14px 0}
+  .btn{flex:1;text-align:center;padding:12px 6px;border-radius:13px;font-size:13.5px;font-weight:700;cursor:pointer}
+  .btn.pri{background:var(--teal);color:#fff} .btn.sec{background:#fff;border:1.5px solid var(--teal);color:var(--teal-d)}
+  .li{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .li:last-child{border-bottom:none} .li .box{width:20px;height:20px;border:2px solid #d4cebf;border-radius:6px}
+  .li .q{margin-left:auto;color:var(--soft);font-size:12.5px}
+  .shared{display:flex;align-items:center;gap:8px;background:var(--teal-bg);border-radius:12px;padding:10px 14px;margin-top:12px;font-size:12.5px;color:var(--teal-d)}
+  .ava{width:26px;height:26px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+  /* toast */
+  .toast{position:absolute;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);opacity:0;
+    background:rgba(47,58,56,.95);color:#fff;font-size:12.5px;padding:9px 16px;border-radius:20px;transition:.3s;z-index:30;pointer-events:none;white-space:nowrap;max-width:90%;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .hint-tap{font-size:11px;color:#b9c4c0;text-align:center;margin-top:4px}
+</style>
+</head>
+<body>
+
+<div class="page-h">
+  <h1>备孕助手 · 交互 mockup v4</h1>
+  <p>点药卡的圈打卡 · 点顶部卡进成长记 · 点"该补了"看补货流（图标为占位）</p>
+</div>
+
+<div class="ahas">
+  <div><b>核心 aha（MVP·已working）</b>：乱药→清晰今日时间轴的<b>掌控感</b>。把今天的药全打卡 → 顶上变成"今天都盯着了，安心"。</div>
+  <div><b>陪伴 aha（本次新增·顶部卡+点击成长记）</b>：两周等待用<b>克制版</b>（移植后第N天/胚胎着床/距开奖，<b>不预设宝宝</b>），验孕成功后才切"宝宝成长记"。</div>
+  <div><span class="v2">aha #1（v2·入口在此）</span>：底部"生成本周陪伴卡"= 调 nano banana 出可晒图。 <span class="v2">aha #2（v2·入口在此）</span>：今日自我照顾 3 条。两者 MVP 只放 teaser。</div>
+</div>
+
+<div class="phone"><div class="screen">
+
+  <!-- ============ VIEW: 今日 ============ -->
+  <div class="view" id="vToday">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+
+      <!-- 顶部状态卡（克制版，可点） -->
+      <div class="stcard" onclick="go('detail')">
+        <div class="ring"><span>🌱</span></div>
+        <div class="info">
+          <div class="t">移植后 · 黄体支持期</div>
+          <div class="b">第 7 天 <small>· 距开奖 5 天</small></div>
+        </div>
+        <div class="arr">›</div>
+      </div>
+      <div class="hint-tap">↑ 点一下看「移植旅程」</div>
+
+      <!-- 进度 / 完成横幅 -->
+      <div class="prog" id="prog"><span id="progTxt">今天 1/4</span><div class="bar"><i id="progBar" style="width:25%"></i></div><span id="progLeft">还剩 3 项</span></div>
+      <div class="doneBanner" id="doneBanner">🌙 今天的药都打卡了 · 安心睡吧，剩下的交给时间</div>
+
+      <div class="seg">早晨 · 8:00</div>
+      <div class="med" data-perday="1" data-days="18" onclick="toggle(this)">
+        <div class="ic">💊</div>
+        <div class="body">
+          <div class="nm"><span class="cdot" style="background:var(--c-flow)"></span>达芙通 <span class="lab">补孕酮</span></div>
+          <div class="use">口服 · 每天 1 片（生殖科）</div>
+          <div class="stock ok"><div class="sbar"><i style="width:60%"></i></div><span class="txt">还够 18 天</span></div>
+          <div class="dtip">✓ 已打卡 · 库存 −1</div>
+        </div>
+        <div class="chk"></div>
+      </div>
+
+      <div class="med" data-perday="1" data-days="12" onclick="toggle(this)">
+        <div class="ic">💉</div>
+        <div class="body">
+          <div class="nm"><span class="cdot" style="background:var(--c-immune)"></span>克赛 <span class="lab">抗凝·保胎</span></div>
+          <div class="use">皮下注射 · 每天 1 针（免疫科）</div>
+          <div class="stock ok"><div class="sbar"><i style="width:50%"></i></div><span class="txt">还够 12 天</span></div>
+          <div class="dtip">✓ 已打卡 · 库存 −1</div>
+        </div>
+        <div class="chk"></div>
+      </div>
+
+      <div class="seg">晚上 · 21:00</div>
+      <div class="med low-stock" data-perday="1" data-days="3" onclick="toggle(this)">
+        <div class="ic">🔻</div>
+        <div class="body">
+          <div class="nm"><span class="cdot" style="background:var(--c-flow)"></span>雪诺同 <span class="lab">黄体支持</span></div>
+          <div class="use">阴道塞药 · 每天 1 支（生殖科）</div>
+          <div class="stock low"><div class="sbar"><i style="width:20%"></i></div><span class="txt">仅够 3 天</span></div>
+          <span class="refill" onclick="event.stopPropagation();openSheet()">⚠ 该补了，去开药要时间 →</span>
+          <div class="dtip">✓ 已打卡 · 库存 −1</div>
+        </div>
+        <div class="chk"></div>
+      </div>
+
+      <div class="med" data-perday="1" data-days="23" onclick="toggle(this)">
+        <div class="ic">💊</div>
+        <div class="body">
+          <div class="nm"><span class="cdot" style="background:var(--c-nutri)"></span>爱乐维 <span class="lab">营养·叶酸</span></div>
+          <div class="use">口服 · 每天 1 片</div>
+          <div class="stock ok"><div class="sbar"><i style="width:75%"></i></div><span class="txt">还够 23 天</span></div>
+          <div class="dtip">✓ 已打卡 · 库存 −1</div>
+        </div>
+        <div class="chk"></div>
+      </div>
+
+      <!-- v2 teaser: 自我照顾 (aha#2) -->
+      <div class="v2sec">
+        <div class="h"><span>🤍 今日的自我照顾</span><span class="v2chip">v2 即将上线</span></div>
+        <div class="softrow">
+          <div class="soft" onclick="this.classList.toggle('on')"><span class="em">💧</span>喝水</div>
+          <div class="soft" onclick="this.classList.toggle('on')"><span class="em">🌙</span>好好休息</div>
+          <div class="soft" onclick="this.classList.toggle('on')"><span class="em">🍚</span>好好吃饭</div>
+        </div>
+        <!-- v2 teaser: 晒图 (aha#1) -->
+        <div class="genbtn" onclick="toast('v2 功能：把这一周的记录生成一张可晒到小红书/朋友圈的陪伴卡')">✨ 生成本周陪伴卡（可晒）</div>
+      </div>
+
+    </div>
+    <div class="tab">
+      <div class="on"><i>📋</i>今日</div>
+      <div onclick="toast('周期页：本周期时间轴 ⇄ 全历程，下一步做')"><i>🔄</i>周期</div>
+      <div onclick="toast('我的：家庭组/药品库/导出，下一步做')"><i>🙂</i>我的</div>
+    </div>
+  </div>
+
+  <!-- ============ VIEW: 移植旅程详情（成长记·克制版）============ -->
+  <div class="view hidden" id="vDetail">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="dtop"><span class="x" onclick="go('today')">‹</span><span>移植旅程</span></div>
+
+      <div class="phasewrap"><span class="phasetag">移植后 · 两周等待</span></div>
+      <div class="bigring"><div class="core"><div class="e">🌱</div><div class="p">26% · 到开奖</div></div></div>
+      <div class="dtitle">移植后 <b>第 7 天</b></div>
+      <div class="dsub">距开奖还有 5 天 · 胚胎正在努力</div>
+
+      <div class="stats">
+        <div class="stat"><div class="n">7<small>天</small></div><div class="l">移植后</div></div>
+        <div class="stat"><div class="n">5<small>天</small></div><div class="l">距开奖</div></div>
+        <div class="stat"><div class="n">7<small>天</small></div><div class="l">用药全勤</div></div>
+      </div>
+
+      <div class="ibox">
+        <div class="ih">🌱 这阶段在发生什么</div>
+        <p>移植第 5–9 天前后，胚胎正在尝试在子宫内膜上着床、扎根。这几天没有感觉是正常的，别太对号入座。</p>
+      </div>
+
+      <div class="timeline">
+        <div class="tl done"><div class="d"></div>移植日</div>
+        <div class="tl done"><div class="d"></div>着床期</div>
+        <div class="tl cur"><div class="d"></div>第7天<br>今天</div>
+        <div class="tl"><div class="d"></div>可测期</div>
+        <div class="tl"><div class="d"></div>开奖日</div>
+      </div>
+
+      <div class="whisper">
+        <div class="wh">💗 今天的悄悄话</div>
+        <p>你能做的——按时用药、好好休息——都做到了。剩下的，交给时间。</p>
+      </div>
+
+      <div class="switchnote">🔒 红线：两周等待期不出现"宝宝像草莓"。等<b>验孕成功</b>后，这一页才会切换成「宝宝成长记」（孕周/胎宝大小/悄悄话）。</div>
+    </div>
+  </div>
+
+  <!-- ============ 补货 sheet ============ -->
+  <div class="mask" id="mask" onclick="if(event.target===this)closeSheet()">
+    <div class="sheet">
+      <h3>⚠ 雪诺同 仅够 3 天了</h3>
+      <div class="sd">每天 1 支、现在剩 3 支。去医院开药 / 快递都要时间，现在就安排补货。</div>
+      <div class="acts">
+        <div class="btn pri" onclick="toast('已加入购物清单')">加入购物清单</div>
+        <div class="btn sec" onclick="toast('已分享给老公 · 他能看到补什么、去哪开')">分享给老公去开药</div>
+      </div>
+      <div class="li"><span class="box"></span>雪诺同 <span class="q">×2 盒</span></div>
+      <div class="li"><span class="box"></span>达芙通 <span class="q">×1 盒</span></div>
+      <div class="shared"><span class="ava">夫</span> 分享给老公时，只露"补什么、去哪开"，不露敏感医疗细节</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+</div></div>
+
+<script>
+  function go(v){
+    document.getElementById('vToday').classList.toggle('hidden', v!=='today');
+    document.getElementById('vDetail').classList.toggle('hidden', v!=='detail');
+  }
+  function recalc(){
+    const meds=[...document.querySelectorAll('#vToday .med')];
+    const done=meds.filter(m=>m.classList.contains('done')).length;
+    const total=meds.length;
+    document.getElementById('progTxt').textContent='今天 '+done+'/'+total;
+    document.getElementById('progBar').style.width=(done/total*100)+'%';
+    document.getElementById('progLeft').textContent='还剩 '+(total-done)+' 项';
+    const allDone=done===total;
+    document.getElementById('prog').style.display=allDone?'none':'flex';
+    document.getElementById('doneBanner').style.display=allDone?'block':'none';
+  }
+  function toggle(card){
+    const nowDone=!card.classList.contains('done');
+    card.classList.toggle('done',nowDone);
+    // 库存联动：还够天数 ±1
+    const txt=card.querySelector('.stock .txt');
+    const bar=card.querySelector('.stock .sbar i');
+    let days=parseInt(card.dataset.days);
+    days=nowDone?days-1:days+1; card.dataset.days=days;
+    if(!card.querySelector('.stock').classList.contains('low'))
+      txt.textContent='还够 '+days+' 天';
+    else txt.textContent='仅够 '+days+' 天';
+    if(nowDone) toast('打卡成功 · 库存 −1，还够 '+days+' 天');
+    recalc();
+  }
+  let t;
+  function toast(msg){
+    const el=document.getElementById('toast');
+    el.textContent=msg; el.classList.add('show');
+    clearTimeout(t); t=setTimeout(()=>el.classList.remove('show'),2200);
+  }
+  function openSheet(){document.getElementById('mask').classList.add('show')}
+  function closeSheet(){document.getElementById('mask').classList.remove('show')}
+  recalc();
+</script>
+</body>
+</html>
