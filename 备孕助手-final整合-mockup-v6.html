@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>备孕助手 · final 整合 mockup v6</title>
+<style>
+  :root{
+    --teal:#5B9A92; --teal-d:#3f7d75; --teal-l:#8fc0b8; --bg:#FBFAF7; --teal-bg:#EAF3F1;
+    --ink:#2f3a38; --soft:#7c8784; --line:#ece8e0; --card:#fff;
+    --green:#5aa978; --green-bg:#e9f5ee; --amber:#c98a2e; --amber-bg:#fbf2e2;
+    --red:#c0584f; --red-bg:#f8ece9; --track:#e7e2d8;
+    --c-flow:#5B9A92; --c-immune:#c98a2e; --c-nutri:#5aa978;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#efeae1;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.5;padding:30px 16px 70px}
+  .page-h{text-align:center;max-width:1000px;margin:0 auto 8px}
+  .page-h h1{font-size:22px;color:var(--teal-d)}
+  .page-h p{font-size:13px;color:var(--soft);margin-top:4px}
+  .note{max-width:880px;margin:14px auto 8px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 18px;font-size:12.5px;color:var(--soft)}
+  .note b{color:var(--teal-d)}
+  .sech{max-width:1000px;margin:34px auto 6px;font-size:16px;font-weight:700;color:var(--teal-d);border-left:5px solid var(--teal);padding-left:11px}
+  .stage{display:flex;gap:30px;justify-content:center;flex-wrap:wrap;align-items:flex-start;max-width:1100px;margin:0 auto}
+  .col{width:330px}
+  .cap{font-size:12px;color:#5f6a67;margin-top:11px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 13px}
+  .cap b{color:var(--teal-d)}
+  .codes{font-size:10.5px;color:#a99;margin-top:4px}
+  .phone{width:330px;background:var(--bg);border-radius:34px;padding:11px;box-shadow:0 10px 38px rgba(0,0,0,.13);border:1px solid #ded8cd}
+  .screen{background:var(--bg);border-radius:24px;overflow:hidden;min-height:680px;position:relative}
+  .sb{display:flex;justify-content:space-between;align-items:center;padding:9px 17px 3px;font-size:11.5px;color:var(--soft)}
+  .pad{padding:6px 16px 84px}
+  .tab{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;padding:8px 0 13px;background:rgba(251,250,247,.96);border-top:1px solid var(--line);font-size:11px;color:#a7afac}
+  .tab .on{color:var(--teal-d);font-weight:600}
+  .tab i{display:block;font-size:17px;margin-bottom:2px}
+  /* generic */
+  h2t{}
+  .ttl{font-size:18px;font-weight:700;padding:4px 2px 10px}
+  .seg{font-size:11.5px;color:var(--soft);font-weight:600;margin:14px 2px 8px;letter-spacing:.5px}
+  .hero{background:linear-gradient(135deg,#5B9A92,#4d8a82);color:#fff;border-radius:18px;padding:14px 16px;margin:4px 0 6px}
+  .hero .d{font-size:22px;font-weight:800}
+  .hero .d small{font-size:13px;font-weight:600;opacity:.92}
+  .hero .s{font-size:12.5px;opacity:.9;margin-top:2px}
+  /* ring */
+  .ringwrap{position:relative;width:210px;height:224px;margin:8px auto 2px}
+  .ringwrap > svg{position:absolute;top:0;left:0}
+  .rc{position:absolute;top:58px;left:0;right:0;text-align:center}
+  .rc .pct{font-size:38px;font-weight:800;line-height:1}
+  .rc .pct small{font-size:16px}
+  .rc .lab{font-size:11.5px;color:var(--teal-d);background:var(--teal-bg);display:inline-block;padding:2px 11px;border-radius:20px;margin-top:6px}
+  .baby{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:86px;height:auto;z-index:2}
+  .babyph{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);font-size:60px;line-height:1;z-index:2}
+  .ringnote{text-align:center;font-size:13px;font-weight:600;color:var(--teal-d);margin:8px 0 12px}
+  /* med card */
+  .med{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:11px 12px;margin-bottom:9px;display:flex;gap:11px;align-items:flex-start;position:relative}
+  .ic{width:40px;height:40px;border-radius:11px;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+  .ic img{width:100%;height:100%;object-fit:cover}
+  .ic .ph{font-size:20px}
+  .med .b{flex:1;min-width:0}
+  .med .nm{font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .cdot{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .lab{font-size:10px;padding:1px 7px;border-radius:20px;background:var(--teal-bg);color:var(--teal-d);font-weight:600}
+  .use{font-size:11.5px;color:var(--soft);margin-top:2px}
+  .stk{display:flex;align-items:center;gap:7px;margin-top:7px;font-size:11.5px}
+  .stk .bar{flex:1;height:5px;background:#eee7da;border-radius:5px;overflow:hidden}
+  .stk .bar i{display:block;height:100%;border-radius:5px}
+  .ok .bar i{width:62%;background:var(--green)} .ok b{color:var(--green)}
+  .low .bar i{width:18%;background:var(--red)} .low b{color:var(--red)}
+  .chk{width:28px;height:28px;border-radius:50%;border:2px solid #d8d2c6;flex-shrink:0;margin-top:2px}
+  .chk.done{background:var(--green);border-color:var(--green);position:relative}
+  .chk.done:after{content:"✓";color:#fff;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .med.done{opacity:.5}.med.done .nm{text-decoration:line-through;text-decoration-color:#bcb}
+  .donetip{font-size:10.5px;color:var(--green);margin-top:5px}
+  .refill{display:inline-flex;align-items:center;gap:4px;background:var(--red-bg);color:var(--red);font-size:11px;font-weight:600;padding:3px 9px;border-radius:18px;margin-top:7px;border:1px solid #eccfca}
+  /* generic card */
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+  .card .ch{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+  .card .ch .more{font-size:11px;color:var(--teal-d);font-weight:600}
+  .row{display:flex;align-items:center;gap:9px;font-size:13px;padding:7px 0;border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:none}
+  .row .em{font-size:17px}
+  .row .r{margin-left:auto;color:var(--soft);font-size:11.5px}
+  .btnf{display:block;text-align:center;background:var(--teal);color:#fff;font-weight:700;font-size:13.5px;padding:11px;border-radius:13px;margin:4px 0}
+  .btno{display:block;text-align:center;background:#fff;border:1.5px solid var(--teal);color:var(--teal-d);font-weight:700;font-size:13px;padding:10px;border-radius:13px;margin:4px 0}
+  .toggle{display:flex;background:var(--teal-bg);border-radius:12px;padding:3px;margin:6px 0 12px;font-size:13px}
+  .toggle div{flex:1;text-align:center;padding:7px;border-radius:9px;color:var(--teal-d);font-weight:600}
+  .toggle .on{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  /* timeline */
+  .tl{position:relative;padding-left:20px;margin:4px 0}
+  .tl:before{content:"";position:absolute;left:6px;top:4px;bottom:4px;width:2px;background:var(--line)}
+  .tl .n{position:relative;padding:6px 0 6px 2px;font-size:13px}
+  .tl .n:before{content:"";position:absolute;left:-17px;top:10px;width:9px;height:9px;border-radius:50%;background:var(--teal-l);border:2px solid #fff}
+  .tl .n.done:before{background:var(--green)} .tl .n.now:before{background:var(--teal);box-shadow:0 0 0 3px var(--teal-bg)}
+  .tl .n .t{font-size:11px;color:var(--soft)}
+  /* level / 关卡 */
+  .lvls{display:flex;gap:6px;margin:8px 0}
+  .lvl{flex:1;text-align:center;font-size:10px;color:var(--soft)}
+  .lvl .dot{width:100%;height:6px;border-radius:5px;background:#e7e2d8;margin-bottom:4px}
+  .lvl.done .dot{background:var(--green)} .lvl.now .dot{background:var(--teal)}
+  .stamp{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;border:2px dashed var(--teal-l);color:var(--teal-d);font-size:9px;margin:3px;text-align:center}
+  .stamp.got{border-style:solid;background:var(--teal-bg)}
+  .accum{background:linear-gradient(135deg,#EAF3F1,#dcebe8);border-radius:14px;padding:13px;text-align:center;margin-bottom:10px}
+  .accum .big{font-size:26px;font-weight:800;color:var(--teal-d)}
+  /* form */
+  .field{background:#fff;border:1px solid var(--line);border-radius:13px;padding:11px 13px;margin-bottom:9px}
+  .field .k{font-size:11px;color:var(--soft);margin-bottom:5px}
+  .field .v{font-size:14.5px;font-weight:600}
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{border:1.5px solid var(--line);border-radius:10px;padding:7px 11px;font-size:12.5px;color:var(--soft)}
+  .chip.sel{border-color:var(--teal);background:var(--teal-bg);color:var(--teal-d);font-weight:700}
+  .step{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden;vertical-align:middle}
+  .step b{width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:var(--teal-d)}
+  .step span{width:36px;text-align:center;font-weight:700}
+  .calc{background:var(--amber-bg);border:1px solid #ecd9b3;border-radius:12px;padding:11px 13px;margin-bottom:9px;font-size:12.5px}
+  .calc .t{color:var(--amber);font-weight:700;margin-bottom:6px}
+  .calc .res{margin-top:7px;padding-top:7px;border-top:1px dashed #e3cda0;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+  .hint{font-size:10.5px;color:var(--soft);margin-top:6px}
+  .twochoice{display:flex;gap:8px}
+  .twochoice .c{flex:1;border:1.5px solid var(--line);border-radius:11px;padding:9px;text-align:center;font-size:12px}
+  .twochoice .c.sel{border-color:var(--teal);background:var(--teal-bg);font-weight:700;color:var(--teal-d)}
+  .save{position:absolute;left:16px;right:16px;bottom:16px;background:var(--teal);color:#fff;text-align:center;padding:13px;border-radius:15px;font-weight:700;box-shadow:0 6px 16px rgba(91,154,146,.38)}
+  /* alert */
+  .alert{background:var(--red-bg);border:1px solid #eccfca;border-radius:15px;padding:14px;margin:4px 0 14px}
+  .alert .t{font-size:14.5px;font-weight:700;color:var(--red)}
+  .alert .s{font-size:12px;color:#9a5249;margin-top:3px}
+  .acts{display:flex;gap:9px;margin-top:12px}
+  .acts .btn{flex:1;text-align:center;padding:11px 4px;border-radius:12px;font-size:12.5px;font-weight:700}
+  .acts .pri{background:var(--teal);color:#fff}.acts .sec{background:#fff;border:1.5px solid var(--teal);color:var(--teal-d)}
+  .letter{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px;font-size:13.5px;line-height:1.8;color:#4a5754;font-family:"Kaiti SC","STKaiti",serif}
+  .share-card{background:linear-gradient(160deg,#EAF3F1,#f6efe6);border:1px solid var(--line);border-radius:18px;padding:18px;text-align:center}
+  .legendmap{max-width:880px;margin:18px auto 0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 18px;font-size:11.5px;color:var(--soft);line-height:1.9}
+  .legendmap b{color:var(--teal-d)}
+</style>
+</head>
+<body>
+
+<div class="page-h">
+  <h1>备孕助手 · final 整合 mockup v6</h1>
+  <p>整合工作台 final 选择 · 3 tab（今日/周期/我的）· 进度环+宝宝 · 6 剂型图标 · 痛点 0 删</p>
+</div>
+<div class="note">
+  <b>读图说明：</b>这是"最终界面长什么样 + 怎么跳"的静态稿。<b>跳转</b>用箭头/标注示意（非真跳）。图标用 <code>04-资产/图标/*.png</code>，你存好真图就显示、没存就显示 emoji 占位。<b>逻辑调整</b>：攻关并入「周期→全历程」；成长记是今日点进去的详情页（克制/暖两版）；重叠组件已合并、痛点全留。
+</div>
+
+<!-- ===================== 今日 ===================== -->
+<div class="sech">① 今日页（今日 tab）</div>
+<div class="stage">
+
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="hero">
+        <div class="d">移植后 第 7 天 <small>· 距开奖 5 天</small></div>
+        <div class="s">稳稳的，今天的药交给我盯着 ☁️</div>
+      </div>
+
+      <div class="ringwrap">
+        <svg width="210" height="210" viewBox="0 0 210 210">
+          <path d="M45.9 175.5 A92 92 0 1 1 164.1 175.5" fill="none" stroke="#e7e2d8" stroke-width="13" stroke-linecap="round"/>
+          <path d="M45.9 175.5 A92 92 0 1 1 164.1 175.5" fill="none" stroke="#5B9A92" stroke-width="13" stroke-linecap="round" pathLength="100" stroke-dasharray="50 100"/>
+        </svg>
+        <div class="rc">
+          <div class="pct">50<small>%</small></div>
+          <div class="lab">今日用药 3/6</div>
+        </div>
+        <img class="baby" src="04-资产/图标/mascot-baby.png" alt="" onerror="this.onerror=null;this.outerHTML='<span class=babyph>👶</span>'">
+      </div>
+      <div class="ringnote">还差 2 项，今天就齐活啦 💪</div>
+
+      <div class="seg">晨 · 已完成</div>
+      <div class="med done">
+        <div class="ic"><img src="04-资产/图标/form-oral.png" onerror="this.onerror=null;this.outerHTML='<span class=ph>💊</span>'"></div>
+        <div class="b"><div class="nm"><span class="cdot" style="background:var(--c-flow)"></span>达芙通 <span class="lab">补孕酮</span></div>
+          <div class="donetip">✓ 已打卡 8:05 · 库存−1，还够 18 天</div></div>
+        <div class="chk done"></div>
+      </div>
+
+      <div class="seg">午 · 待办</div>
+      <div class="med">
+        <div class="ic"><img src="04-资产/图标/form-sc.png" onerror="this.onerror=null;this.outerHTML='<span class=ph>🖊️</span>'"></div>
+        <div class="b"><div class="nm"><span class="cdot" style="background:var(--c-immune)"></span>克赛 <span class="lab">皮下·自己打</span></div>
+          <div class="use">每天 1 针（免疫科）</div>
+          <div class="stk ok"><div class="bar"><i></i></div><b>还够 12 天</b></div></div>
+        <div class="chk"></div>
+      </div>
+
+      <div class="seg">晚 · 待办</div>
+      <div class="med">
+        <div class="ic"><img src="04-资产/图标/form-vaginal.png" onerror="this.onerror=null;this.outerHTML='<span class=ph>🔻</span>'"></div>
+        <div class="b"><div class="nm"><span class="cdot" style="background:var(--c-flow)"></span>雪诺同 <span class="lab">黄体支持</span></div>
+          <div class="use">阴道塞药 · 每天 1 支（生殖科）</div>
+          <div class="stk low"><div class="bar"><i></i></div><b>仅够 3 天</b></div>
+          <span class="refill">⚠ 该补了 →</span></div>
+        <div class="chk"></div>
+      </div>
+
+      <!-- D1 停药节点卡 -->
+      <div class="card" style="background:var(--amber-bg);border-color:#ecd9b3">
+        <div class="ch"><span>📅 停药节点提醒</span></div>
+        <div style="font-size:12.5px;color:#8a6a2e">达芙通：开奖后若好孕，继续到 <b>孕 10 周</b>；若未孕，开奖当天遵医嘱停。<span style="color:var(--soft)">（以医嘱为准）</span></div>
+      </div>
+
+      <!-- E2 给宝宝说一句 -->
+      <div class="card" style="background:linear-gradient(135deg,#fbeef0,#f6efe6);border-color:#eed7da">
+        <div class="row" style="border:none;padding:2px 0"><span class="em">💌</span>给 TA 说一句今天的话…<span class="r">写一句 →</span></div>
+      </div>
+    </div>
+    <div class="tab"><div class="on"><i>📋</i>今日</div><div><i>🔄</i>周期</div><div><i>🙂</i>我的</div></div>
+  </div></div>
+  <div class="cap"><b>今日页 = 产品心脏。</b>倒计时 hero（克制不预设宝宝）+ 进度环（宝宝在环下，% 在环中）+ 晨/午/晚药卡（库存"还够X天"）+ 已完成消散留痕 + 余量告急补货 + 停药节点 + 给宝宝说一句。
+  <div class="codes">T2 · P2 · M1 · C2 · S1 · S2 · D1 · E2</div></div>
+  </div>
+
+</div>
+
+<!-- ===================== 周期 ===================== -->
+<div class="sech">② 周期 tab（本周期 ⇄ 全历程 顶部切换；攻关已并入"全历程"）</div>
+<div class="stage">
+
+  <!-- 本周期 -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="ttl">周期</div>
+      <div class="toggle"><div class="on">本周期</div><div>全历程</div></div>
+
+      <div class="card">
+        <div class="ch"><span>🧭 本周期节点</span><span class="more">第 2 周期 · FET</span></div>
+        <div class="tl">
+          <div class="n done">内膜准备（HRT）<div class="t">6/1 起 · 补佳乐</div></div>
+          <div class="n done">加孕激素 = 转化第0天<div class="t">6/12</div></div>
+          <div class="n done">移植 D5 囊胚<div class="t">6/17</div></div>
+          <div class="n now">黄体支持中<div class="t">移植后第 7 天</div></div>
+          <div class="n">开奖（验孕）<div class="t">6/29 · 还有 5 天</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><span>💊 当前用药方案一览</span><span class="more">6 种在用</span></div>
+        <div class="row"><span class="cdot" style="background:var(--c-flow)"></span>雪诺同 · 塞 · 每天1支<span class="r">还够3天</span></div>
+        <div class="row"><span class="cdot" style="background:var(--c-flow)"></span>达芙通 · 吃 · 每天2片<span class="r">还够18天</span></div>
+        <div class="row"><span class="cdot" style="background:var(--c-immune)"></span>克赛 · 皮下 · 每天1针<span class="r">还够12天</span></div>
+        <div class="row"><span class="cdot" style="background:var(--c-nutri)"></span>爱乐维 · 吃 · 每天1片<span class="r">还够23天</span></div>
+      </div>
+
+      <a class="btnf">🔄 医生改方案了？一键更新</a>
+      <a class="btno">🕓 换药留痕 · 看历次调整</a>
+    </div>
+    <div class="tab"><div><i>📋</i>今日</div><div class="on"><i>🔄</i>周期</div><div><i>🙂</i>我的</div></div>
+  </div></div>
+  <div class="cap"><b>本周期视图：</b>节点时间轴（含"转化第0天"锚点）+ 当前方案一览（合并了 OV1）+ 一键更新（命门）+ 换药留痕。
+  <div class="codes">CY5 · CY1 · CY4(=OV1) · CY3 · AT5</div></div>
+  </div>
+
+  <!-- 全历程 / 攻关 -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="ttl">周期</div>
+      <div class="toggle"><div>本周期</div><div class="on">全历程</div></div>
+
+      <!-- 关卡框架 -->
+      <div class="card">
+        <div class="ch"><span>🏔️ 好孕之路</span><span class="more">第 2 关 · 移植</span></div>
+        <div class="lvls">
+          <div class="lvl done"><div class="dot"></div>促排</div>
+          <div class="lvl done"><div class="dot"></div>取卵</div>
+          <div class="lvl done"><div class="dot"></div>PGT</div>
+          <div class="lvl now"><div class="dot"></div>移植</div>
+          <div class="lvl"><div class="dot"></div>开奖</div>
+        </div>
+        <div style="font-size:12px;color:var(--soft)">已闯过 3 关，正在第 4 关——稳住，你已经走了很远。</div>
+      </div>
+
+      <!-- 为TA攒的 -->
+      <div class="accum">
+        <div style="font-size:12px;color:var(--teal-d)">为 TA 攒的</div>
+        <div class="big">128 针 · 356 粒药</div>
+        <div style="font-size:11px;color:var(--soft)">两个周期，你一天没放弃</div>
+      </div>
+
+      <!-- 多周期档案 -->
+      <div class="card">
+        <div class="ch"><span>🗂️ 多周期病程档案</span></div>
+        <div class="row">周期 1 · 鲜胚移植<span class="r" style="color:var(--red)">未着床</span></div>
+        <div class="row">周期 2 · FET 囊胚<span class="r" style="color:var(--teal-d)">进行中</span></div>
+      </div>
+
+      <!-- 里程碑印章 + 时光信箱 -->
+      <div class="card">
+        <div class="ch"><span>🏅 里程碑印章</span></div>
+        <div style="text-align:center">
+          <span class="stamp got">取卵<br>成功</span>
+          <span class="stamp got">攒够<br>囊胚</span>
+          <span class="stamp got">移植<br>日</span>
+          <span class="stamp">开奖<br>?</span>
+        </div>
+      </div>
+      <a class="btno">💌 时光信箱 · 给 TA 的信</a>
+    </div>
+    <div class="tab"><div><i>📋</i>今日</div><div class="on"><i>🔄</i>周期</div><div><i>🙂</i>我的</div></div>
+  </div></div>
+  <div class="cap"><b>全历程视图（=原"攻关"）：</b>好孕之路关卡 + 为TA攒的累积 + 多周期档案 + 里程碑印章 + 时光信箱。情绪叙事都收这里。
+  <div class="codes">AT1(=G3) · AT2 · AT4 · AT3(=G4) · AT7</div></div>
+  </div>
+
+</div>
+
+<!-- ===================== 我的 + 成长记 ===================== -->
+<div class="sech">③ 我的 tab ＋ 成长记详情页</div>
+<div class="stage">
+
+  <!-- 我的 -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="ttl">我的</div>
+      <div class="card">
+        <div class="row"><span class="em">📚</span>中文 IVF 药品库<span class="r">含储存提示 ›</span></div>
+        <div class="row"><span class="em">🔔</span>提醒设置<span class="r">App+日历+短信 ›</span></div>
+        <div class="row"><span class="em">👨‍👩‍👧</span>分享给老公<span class="r">只看孕周/补药 ›</span></div>
+        <div class="row"><span class="em">📄</span>复诊小结导出<span class="r">›</span></div>
+        <div class="row"><span class="em">💾</span>备份 / 换机导出<span class="r">›</span></div>
+        <div class="row"><span class="em">🏠</span>家庭组（建组+邀请）<span class="r">›</span></div>
+      </div>
+      <div class="card" style="background:var(--teal-bg);border-color:#cfe4df">
+        <div style="font-size:12px;color:var(--teal-d)">🔒 数据存在你手机本地，不上服务器——隐私是这个产品的底线。</div>
+      </div>
+    </div>
+    <div class="tab"><div><i>📋</i>今日</div><div><i>🔄</i>周期</div><div class="on"><i>🙂</i>我的</div></div>
+  </div></div>
+  <div class="cap"><b>我的：</b>药品库/提醒/分享老公/复诊导出/备份/家庭组。
+  <div class="codes">MY1 · MY2 · MY3 · MY5 · MY6 · MY8</div></div>
+  </div>
+
+  <!-- 成长记 克制版 -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="ttl">＜ 这段旅程</div>
+      <div class="card" style="text-align:center;padding:22px 16px">
+        <div style="font-size:14px;color:var(--teal-d);font-weight:700">移植后 第 7 天</div>
+        <div style="margin:14px 0"><span class="babyph" style="font-size:60px">🌱</span></div>
+        <div style="font-size:15px;font-weight:700">胚胎正在努力着床</div>
+        <div style="font-size:12.5px;color:var(--soft);margin-top:6px">距开奖还有 5 天 · 你能做的都做到了，剩下的交给时间</div>
+      </div>
+      <div class="card">
+        <div class="ch">🌿 这几天在发生什么</div>
+        <div style="font-size:12.5px;color:var(--soft)">囊胚在子宫里寻找着床点。多休息、别太焦虑——情绪平稳对着床也好。</div>
+      </div>
+    </div>
+    <div class="tab"><div><i>📋</i>今日</div><div><i>🔄</i>周期</div><div><i>🙂</i>我的</div></div>
+  </div></div>
+  <div class="cap"><b>成长记·克制版（两周等待）：</b>不预设宝宝，用小芽芽+"胚胎在着床"。守红线。
+  <div class="codes">G1</div></div>
+  </div>
+
+  <!-- 成长记 暖版 -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="ttl">＜ 宝宝成长记</div>
+      <div class="card" style="text-align:center;padding:20px 16px">
+        <div style="font-size:13px;color:var(--teal-d)">孕 10 周 · 验孕成功后解锁 🎉</div>
+        <div style="margin:12px 0"><img src="04-资产/图标/mascot-baby.png" style="width:84px;height:84px" onerror="this.onerror=null;this.outerHTML='<span class=babyph style=font-size:64px>👶</span>'"></div>
+        <div style="font-size:16px;font-weight:800">这周宝宝像一颗草莓 🍓</div>
+        <div style="font-size:12px;color:var(--soft);margin-top:4px">身长约 3.1cm · 还有 208 天见面</div>
+      </div>
+      <div class="card"><div class="ch">🌿 本周小变化</div><div style="font-size:12.5px;color:var(--soft)">进入胎儿期，指甲和细小绒毛开始生长，关节能弯曲了。</div></div>
+    </div>
+    <div class="tab"><div><i>📋</i>今日</div><div><i>🔄</i>周期</div><div><i>🙂</i>我的</div></div>
+  </div></div>
+  <div class="cap"><b>成长记·暖版（验孕成功后）：</b>切换成宝宝形象+尺寸类比。一个开关、两套文案。
+  <div class="codes">G2</div></div>
+  </div>
+
+</div>
+
+<!-- ===================== 弹层 ===================== -->
+<div class="sech">④ 弹层：录方案 onboarding · 录/改药 · 补货 · 情感</div>
+<div class="stage">
+
+  <!-- onboarding -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="ttl">录入你的方案</div>
+      <div class="card" style="background:var(--teal-bg);border-color:#cfe4df">
+        <div style="font-size:12.5px;color:var(--teal-d)">📷 诊室扫码 → 5 分钟录 → 看清晰提醒（最短价值路径）</div>
+      </div>
+      <div class="field"><div class="k">① 从药品库选药 + 填医嘱</div><div class="v">雪诺同 · 达芙通 · 克赛 …</div></div>
+      <div class="field"><div class="k">② 移植日（一个日期，不用选方案）</div><div class="v">2026-06-17 → 自动算"移植后第 7 天"</div></div>
+      <div class="hint">不问你"什么方案"——只问有什么药、怎么用、哪天移植。其余自动算。</div>
+    </div>
+    <div class="save">开始用</div>
+  </div></div>
+  <div class="cap"><b>onboarding 录方案：</b>扫码最短路径 + 药库选药填医嘱 + 移植日自动算第N天。不让用户选方案。
+  <div class="codes">ON1 · ON3 · ON4</div></div>
+  </div>
+
+  <!-- 录/改药 -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="ttl">＜ 记一个药</div>
+      <div class="field"><div class="k">录入方式</div>
+        <div class="chips"><span class="chip sel">⌨️ 手填</span><span class="chip">📷 拍方案单</span><span class="chip">🎤 语音</span><span class="chip">📋 粘贴</span></div></div>
+      <div class="field"><div class="k">怎么用药（决定单位）</div>
+        <div class="chips"><span class="chip">💊 吃</span><span class="chip">💉 肌注</span><span class="chip">🖊️ 皮下</span><span class="chip sel">🔻 塞</span></div></div>
+      <!-- AD3 剂量歧义二选一 -->
+      <div class="field"><div class="k">⚠️ 这个写法有歧义，你是哪种？</div>
+        <div class="twochoice"><div class="c sel">每天 1 支</div><div class="c">每天 2 支</div></div></div>
+      <div class="field" style="background:#f6fbfa;border-color:#cfe4df"><div class="k">库存：现在有多少（单位：支）</div>
+        <span class="step"><b>−</b><span>2</span><b>+</b></span> 盒 × 每盒 <span class="step"><b>−</b><span>15</span><b>+</b></span> 支 <b style="color:var(--teal-d)">= 30 支</b>
+        <div class="hint">用完提醒：默认剩 3 天的量 ✏️</div></div>
+      <div class="field"><div class="k">停药条件</div><div class="v">开奖好孕→续到孕10周 / 未孕→遵医嘱停</div></div>
+      <a class="btno">📤 生成清单发给医生现场确认</a>
+    </div>
+    <div class="save">加入清单</div>
+  </div></div>
+  <div class="cap"><b>录/改药：</b>多通道录入 + 剂型 + 剂量歧义二选一确认 + 库存 + 停药字段 + 发医生确认。
+  <div class="codes">AD2 · AD1 · AD3 · AD4 · AD5</div></div>
+  </div>
+
+  <!-- 补货 + 果纳芬 -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="ttl">余量提醒</div>
+      <div class="alert">
+        <div class="t">⚠ 雪诺同 仅够 3 天了</div>
+        <div class="s">去医院开药要时间，现在就安排补货。</div>
+        <div class="acts"><div class="btn pri">加入购物清单</div><div class="btn sec">分享给老公开药</div></div>
+      </div>
+      <!-- AD6 果纳芬计算 -->
+      <div class="calc">
+        <div class="t">⚙️ 果纳芬这种"笔"，帮你估能用几天</div>
+        <div style="display:flex;justify-content:space-between"><span>拿到</span><span>900 IU × 1 支</span></div>
+        <div style="display:flex;justify-content:space-between"><span>医嘱</span><span>每天 225 IU</span></div>
+        <div class="res"><span>≈ 够 4 天 · 对吗？</span><span style="background:var(--teal);color:#fff;padding:4px 12px;border-radius:16px;font-size:12px">确认</span></div>
+        <div class="hint">一支用几次因人而异，你确认一下更准（模糊+确认 &gt; 精确但错）。</div>
+      </div>
+      <div class="card"><div class="ch"><span>🛒 购物清单</span><span class="more">已分享给老公</span></div>
+        <div class="row">雪诺同<span class="r">×2 盒</span></div>
+        <div class="row">克赛<span class="r">×1 盒</span></div></div>
+    </div>
+    <div class="tab"><div class="on"><i>📋</i>今日</div><div><i>🔄</i>周期</div><div><i>🙂</i>我的</div></div>
+  </div></div>
+  <div class="cap"><b>补货 + 果纳芬：</b>余量告急→购物清单+分享老公；笔类计算+用户确认。
+  <div class="codes">RF1 · AD6</div></div>
+  </div>
+
+  <!-- 情感：时光信箱 + 陪伴卡 -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="ttl">💌 时光信箱</div>
+      <div class="letter">
+        亲爱的宝宝：<br>今天是移植后第 7 天。妈妈把该打的针、该吃的药都做到了。<br>克服了打针的害怕，等你来。<br><span style="color:var(--soft);font-size:11px">2026-06-24 · 移植后第7天</span>
+      </div>
+      <div class="seg" style="margin-top:18px">EM4 · 生成本周陪伴卡（可晒）</div>
+      <div class="share-card">
+        <img src="04-资产/图标/mascot-baby.png" style="width:60px;height:60px" onerror="this.onerror=null;this.outerHTML='<span class=babyph style=font-size:48px>👶</span>'">
+        <div style="font-weight:800;margin-top:6px;color:var(--teal-d)">移植后第 7 天 · 已坚持 128 针</div>
+        <div style="font-size:11.5px;color:var(--soft);margin-top:4px">温柔的画框 AI 生成 · 精确数字代码叠加</div>
+      </div>
+      <div class="hint" style="text-align:center;margin-top:10px">⚠️ v2 才接图像模型；v1 先留数据接口（带时间戳+一句话）</div>
+    </div>
+    <div class="tab"><div><i>📋</i>今日</div><div><i>🔄</i>周期</div><div><i>🙂</i>我的</div></div>
+  </div></div>
+  <div class="cap"><b>情感层：</b>时光信箱打字机信（v1 数据接口）+ 本周陪伴卡（晒图，v2 接图像模型，混合架构）。
+  <div class="codes">EM2 · EM4</div></div>
+  </div>
+
+</div>
+
+<div class="legendmap">
+  <b>组件落位核对（痛点 0 删）：</b>
+  今日=T2/P2/M1/C2/S1/S2/D1/E2 ·
+  周期·本周期=CY5/CY1/CY4(并OV1)/CY3/AT5 ·
+  周期·全历程=AT1(并G3)/AT2/AT4/AT3(并G4)/AT7 ·
+  我的=MY1/MY2/MY3/MY5/MY6/MY8 ·
+  成长记=G1/G2 ·
+  弹层=ON1/ON3/ON4 · AD1/AD2/AD3/AD4/AD5/AD6 · RF1/OV1(并入CY4)/OV2* · RM1/RM2(在我的·提醒设置内) · EM2/EM4<br>
+  <span style="color:#b99">* OV2 三方医嘱合并：放在"一键更新方案/复诊小结"流程里，未单独画屏。RM1/RM2 在「我的→提醒设置」内。</span>
+</div>
+
+</body>
+</html>

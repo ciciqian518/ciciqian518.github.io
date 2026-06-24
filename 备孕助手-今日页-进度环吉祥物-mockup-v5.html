@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>备孕助手 · 今日页 进度环+吉祥物 mockup v5</title>
+<style>
+  :root{
+    --teal:#5B9A92; --teal-d:#3f7d75; --teal-l:#8fc0b8; --bg:#FBFAF7; --teal-bg:#EAF3F1;
+    --ink:#2f3a38; --soft:#7c8784; --line:#ece8e0; --card:#fff;
+    --green:#5aa978; --amber:#c98a2e; --amber-bg:#fbf2e2; --red:#c0584f; --red-bg:#f8ece9;
+    --track:#e7e2d8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#efeae1;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.5;padding:30px 16px 60px}
+  .page-h{text-align:center;max-width:900px;margin:0 auto 6px}
+  .page-h h1{font-size:21px;color:var(--teal-d)}
+  .page-h p{font-size:13px;color:var(--soft);margin-top:4px}
+  .note{max-width:760px;margin:14px auto 26px;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:12px 18px;font-size:12.5px;color:var(--soft)}
+  .note b{color:var(--teal-d)}
+  .stage{display:flex;gap:34px;justify-content:center;flex-wrap:wrap;align-items:flex-start}
+  .col{width:332px}
+  .cap{font-size:12.5px;color:#5f6a67;margin-top:12px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+  .cap b{color:var(--teal-d)}
+  .phone{width:332px;background:var(--bg);border-radius:34px;padding:12px;box-shadow:0 10px 40px rgba(0,0,0,.14);border:1px solid #ded8cd}
+  .screen{background:var(--bg);border-radius:24px;overflow:hidden;min-height:700px;position:relative}
+  .sb{display:flex;justify-content:space-between;align-items:center;padding:10px 18px 4px;font-size:12px;color:var(--soft)}
+  .pad{padding:8px 18px 88px}
+  /* header */
+  .hd{display:flex;justify-content:space-between;align-items:flex-start;margin:2px 0 6px}
+  .hd .day{font-size:15px;font-weight:700;color:var(--ink)}
+  .hd .sub{font-size:12.5px;color:var(--teal-d);margin-top:2px}
+  .hd .pill{background:var(--teal-bg);color:var(--teal-d);font-size:11px;font-weight:600;padding:5px 11px;border-radius:20px}
+  /* ring */
+  .ringwrap{position:relative;width:240px;height:240px;margin:6px auto 2px}
+  .ringwrap svg{transform:rotate(-90deg)}
+  .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .mascot{width:78px;height:86px;margin-bottom:2px}
+  .pct{font-size:40px;font-weight:800;color:var(--ink);line-height:1}
+  .pct small{font-size:18px;font-weight:700}
+  .pctlab{font-size:12.5px;color:var(--soft);margin-top:1px}
+  .statusline{text-align:center;font-size:14.5px;font-weight:600;margin:8px 0 16px}
+  .statusline.go{color:var(--teal-d)} .statusline.done{color:var(--green)}
+  /* two info cards */
+  .row2{display:flex;gap:11px;margin-bottom:14px}
+  .ic{flex:1;background:var(--card);border:1px solid var(--line);border-radius:15px;padding:12px 14px}
+  .ic .k{font-size:11.5px;color:var(--soft);display:flex;align-items:center;gap:5px}
+  .ic .v{font-size:21px;font-weight:800;color:var(--ink);margin-top:3px}
+  .ic .v small{font-size:12px;font-weight:600;color:var(--soft)}
+  .ic .s{font-size:11px;color:var(--soft);margin-top:1px}
+  /* today strip */
+  .seg{font-size:12px;color:var(--soft);font-weight:600;margin:6px 2px 9px}
+  .pillrow{display:flex;gap:9px;flex-wrap:wrap}
+  .mp{flex:1;min-width:88px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center;position:relative}
+  .mp .em{font-size:22px}
+  .mp .nm{font-size:12px;font-weight:600;margin-top:3px}
+  .mp .tm{font-size:10.5px;color:var(--soft)}
+  .mp .cdot{position:absolute;top:8px;left:8px;width:7px;height:7px;border-radius:50%}
+  .mp.ok{opacity:.5}
+  .mp.ok:after{content:"✓";position:absolute;top:7px;right:9px;color:var(--green);font-weight:800;font-size:14px}
+  .mp.due{border-color:#eccfca;background:var(--red-bg)}
+  .add{display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--teal);background:var(--teal-bg);border:1px dashed var(--teal-l)}
+  /* tab */
+  .tab{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;padding:9px 0 14px;background:rgba(251,250,247,.96);border-top:1px solid var(--line);font-size:11px;color:#a7afac}
+  .tab .on{color:var(--teal-d);font-weight:600}
+  .tab i{display:block;font-size:18px;margin-bottom:2px}
+  .legend{max-width:760px;margin:28px auto 0;font-size:12px;color:var(--soft);text-align:center;line-height:1.9}
+  .cdotL{display:inline-block;width:9px;height:9px;border-radius:50%;margin:0 3px 0 10px;vertical-align:middle}
+</style>
+</head>
+<body>
+
+<div class="page-h">
+  <h1>备孕助手 · 今日页（进度环 + 吉祥物）mockup v5</h1>
+  <p>借鉴喝水 app 的"大圆环+百分比+会变表情吉祥物" ｜ 换成我们温暖手绘风 ｜ 吉祥物=克制版陪伴小家伙（非宝宝）</p>
+</div>
+<div class="note">
+  <b>这版试的是"成就感"：</b>把用药完成度做成一个大圆环——每打卡一顿，环涨一截、中间的小家伙更精神，左下角文字从"还差2项"变成"今天都搞定了✓"。<b>红线</b>：移植后两周等待不放宝宝形象，吉祥物用温柔的"小水滴/芽芽"，验孕成功后再换成宝宝。两屏对比：<b>左=进行中（50%）/ 右=全部完成（100%）</b>。
+</div>
+
+<div class="stage">
+
+  <!-- =============== STATE A · 进行中 =============== -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="hd">
+        <div>
+          <div class="day">6月24日 · 周三</div>
+          <div class="sub">移植后第 7 天 · 距开奖 5 天</div>
+        </div>
+        <div class="pill">稳稳的 ☁️</div>
+      </div>
+
+      <div class="ringwrap">
+        <svg width="240" height="240" viewBox="0 0 240 240">
+          <circle cx="120" cy="120" r="106" fill="none" stroke="#e7e2d8" stroke-width="14"/>
+          <circle cx="120" cy="120" r="106" fill="none" stroke="#5B9A92" stroke-width="14"
+            stroke-linecap="round" stroke-dasharray="666" stroke-dashoffset="333"/>
+        </svg>
+        <div class="center">
+          <!-- 克制版吉祥物：水滴/芽芽，平和微笑 -->
+          <svg class="mascot" viewBox="0 0 100 110">
+            <path d="M50 8 C50 8 18 46 18 70 a32 32 0 0 0 64 0 C82 46 50 8 50 8Z" fill="#8fc0b8"/>
+            <path d="M50 8 C50 8 18 46 18 70 a32 32 0 0 0 64 0 C82 46 50 8 50 8Z" fill="none" stroke="#5B9A92" stroke-width="2.5" opacity=".5"/>
+            <!-- 小芽 -->
+            <path d="M50 14 q10 -10 20 -8 q-3 11 -16 13Z" fill="#7bbf8e"/>
+            <circle cx="40" cy="66" r="4.2" fill="#2f3a38"/>
+            <circle cx="62" cy="66" r="4.2" fill="#2f3a38"/>
+            <circle cx="41.5" cy="64.5" r="1.3" fill="#fff"/>
+            <circle cx="63.5" cy="64.5" r="1.3" fill="#fff"/>
+            <path d="M44 78 q7 7 14 0" fill="none" stroke="#2f3a38" stroke-width="2.6" stroke-linecap="round"/>
+            <circle cx="33" cy="74" r="4" fill="#e79", opacity=".35"/>
+            <circle cx="69" cy="74" r="4" fill="#e79" opacity=".3"/>
+          </svg>
+          <div class="pct">50<small>%</small></div>
+          <div class="pctlab">今日用药 3/6</div>
+        </div>
+      </div>
+      <div class="statusline go">还差 2 项，今天就齐活啦 💪</div>
+
+      <div class="row2">
+        <div class="ic">
+          <div class="k">🔔 下次用药</div>
+          <div class="v">19:00</div>
+          <div class="s">雪诺同 · 还有 1 小时</div>
+        </div>
+        <div class="ic">
+          <div class="k">📦 余量告急</div>
+          <div class="v" style="color:var(--red)">雪诺同</div>
+          <div class="s">仅够 3 天 · 该补了 →</div>
+        </div>
+      </div>
+
+      <div class="seg">今天的药</div>
+      <div class="pillrow">
+        <div class="mp ok"><span class="cdot" style="background:var(--teal)"></span><div class="em">💊</div><div class="nm">达芙通</div><div class="tm">8:00</div></div>
+        <div class="mp ok"><span class="cdot" style="background:var(--amber)"></span><div class="em">💉</div><div class="nm">克赛</div><div class="tm">8:30</div></div>
+        <div class="mp ok"><span class="cdot" style="background:var(--green)"></span><div class="em">💊</div><div class="nm">爱乐维</div><div class="tm">9:00</div></div>
+      </div>
+      <div class="pillrow" style="margin-top:9px">
+        <div class="mp due"><span class="cdot" style="background:var(--teal)"></span><div class="em">🔻</div><div class="nm">雪诺同</div><div class="tm">19:00 待</div></div>
+        <div class="mp"><span class="cdot" style="background:var(--teal)"></span><div class="em">💊</div><div class="nm">达芙通</div><div class="tm">20:00 待</div></div>
+        <div class="mp"><span class="cdot" style="background:var(--amber)"></span><div class="em">💉</div><div class="nm">克赛</div><div class="tm">20:30 待</div></div>
+      </div>
+    </div>
+    <div class="tab"><div class="on"><i>📋</i>今日</div><div><i>🔄</i>周期</div><div><i>🙂</i>我的</div></div>
+  </div></div>
+  <div class="cap"><b>进行中（50%）：</b>环填一半、小家伙平和微笑、文字"还差2项"。已完成的药卡变灰打勾下沉（消散+留痕）；待办的正常显示，到点的雪诺同标红"待"。余量告急直接上首页卡片。</div>
+  </div>
+
+  <!-- =============== STATE B · 全部完成 =============== -->
+  <div class="col">
+  <div class="phone"><div class="screen">
+    <div class="sb"><span>21:05</span><span>📶 🔋</span></div>
+    <div class="pad">
+      <div class="hd">
+        <div>
+          <div class="day">6月24日 · 周三</div>
+          <div class="sub">移植后第 7 天 · 距开奖 5 天</div>
+        </div>
+        <div class="pill">今天满分 ✨</div>
+      </div>
+
+      <div class="ringwrap">
+        <svg width="240" height="240" viewBox="0 0 240 240">
+          <circle cx="120" cy="120" r="106" fill="none" stroke="#e7e2d8" stroke-width="14"/>
+          <circle cx="120" cy="120" r="106" fill="none" stroke="#5B9A92" stroke-width="14"
+            stroke-linecap="round" stroke-dasharray="666" stroke-dashoffset="0"/>
+        </svg>
+        <div class="center">
+          <!-- 吉祥物：开心 + 闪光 -->
+          <svg class="mascot" viewBox="0 0 100 110">
+            <path d="M50 8 C50 8 18 46 18 70 a32 32 0 0 0 64 0 C82 46 50 8 50 8Z" fill="#7fc0b6"/>
+            <path d="M50 14 q10 -10 20 -8 q-3 11 -16 13Z" fill="#7bbf8e"/>
+            <path d="M35 65 q5 -6 10 0" fill="none" stroke="#2f3a38" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M57 65 q5 -6 10 0" fill="none" stroke="#2f3a38" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M42 76 q8 9 16 0" fill="none" stroke="#2f3a38" stroke-width="2.8" stroke-linecap="round"/>
+            <circle cx="32" cy="73" r="4.5" fill="#e79" opacity=".4"/>
+            <circle cx="70" cy="73" r="4.5" fill="#e79" opacity=".4"/>
+            <text x="14" y="30" font-size="13">✨</text>
+            <text x="78" y="40" font-size="11">✨</text>
+          </svg>
+          <div class="pct">100<small>%</small></div>
+          <div class="pctlab">今日用药 6/6</div>
+        </div>
+      </div>
+      <div class="statusline done">今天的药都搞定了 ✓ 你做得很好</div>
+
+      <div class="row2">
+        <div class="ic">
+          <div class="k">🔔 明天首次</div>
+          <div class="v">8:00</div>
+          <div class="s">达芙通 · 已设提醒</div>
+        </div>
+        <div class="ic">
+          <div class="k">🤍 已坚持</div>
+          <div class="v">7<small> 天</small></div>
+          <div class="s">移植后一天没落下</div>
+        </div>
+      </div>
+
+      <div class="seg">今天的药 · 全部完成</div>
+      <div class="pillrow">
+        <div class="mp ok"><span class="cdot" style="background:var(--teal)"></span><div class="em">💊</div><div class="nm">达芙通</div><div class="tm">8:00</div></div>
+        <div class="mp ok"><span class="cdot" style="background:var(--amber)"></span><div class="em">💉</div><div class="nm">克赛</div><div class="tm">8:30</div></div>
+        <div class="mp ok"><span class="cdot" style="background:var(--green)"></span><div class="em">💊</div><div class="nm">爱乐维</div><div class="tm">9:00</div></div>
+      </div>
+      <div class="pillrow" style="margin-top:9px">
+        <div class="mp ok"><span class="cdot" style="background:var(--teal)"></span><div class="em">🔻</div><div class="nm">雪诺同</div><div class="tm">19:00</div></div>
+        <div class="mp ok"><span class="cdot" style="background:var(--teal)"></span><div class="em">💊</div><div class="nm">达芙通</div><div class="tm">20:00</div></div>
+        <div class="mp ok"><span class="cdot" style="background:var(--amber)"></span><div class="em">💉</div><div class="nm">克赛</div><div class="tm">20:30</div></div>
+      </div>
+    </div>
+    <div class="tab"><div class="on"><i>📋</i>今日</div><div><i>🔄</i>周期</div><div><i>🙂</i>我的</div></div>
+  </div></div>
+  <div class="cap"><b>全部完成（100%）：</b>环满、小家伙开心冒星星、文字"你做得很好"。把成就感拉满——但<b>永不惩罚</b>：没完成时只温柔提示、绝不批评（红线）。"已坚持7天"是掌控感的具象化。</div>
+  </div>
+
+</div>
+
+<div class="legend">
+  类别线：<span class="cdotL" style="background:var(--teal)"></span>流程（生殖科）
+  <span class="cdotL" style="background:var(--amber)"></span>免疫保胎
+  <span class="cdotL" style="background:var(--green)"></span>营养 ｜
+  剂型占位：💊吃 · 💉打 · 🔻塞（待替换 form- 手绘图标）｜
+  吉祥物为内联 SVG 草稿，最终可用 nano banana 出同风格 PNG 替换
+</div>
+
+</body>
+</html>
